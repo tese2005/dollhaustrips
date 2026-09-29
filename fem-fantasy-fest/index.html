@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0612">
+<title>Fem Fantasy Fest · Group Trip Planner</title>
+<style>
+:root{
+  --bg:#07050d; --bg2:#120a1f;
+  --pink:#ff2fb3; --pink2:#ff6fd0; --magenta:#c21cff; --ice:#9fe8ff; --ice2:#d9f6ff;
+  --text:#f4ecff; --muted:#b9a8d6; --line:rgba(255,255,255,.12);
+  --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.1);
+  --ok:#5dffb0; --warn:#ffd36b; --bad:#ff6b8a;
+  --r:18px; --nav-h:68px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Helvetica,Arial,sans-serif;
+  color:var(--text); background:var(--bg); min-height:100vh; line-height:1.45;
+  background-image:
+    radial-gradient(900px 500px at 10% -10%, rgba(255,47,179,.28), transparent 60%),
+    radial-gradient(700px 500px at 110% 10%, rgba(159,232,255,.18), transparent 60%),
+    radial-gradient(800px 600px at 50% 120%, rgba(194,28,255,.25), transparent 60%);
+  background-attachment:fixed;
+  padding-bottom:calc(var(--nav-h) + 24px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing:antialiased;
+}
+.shards{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.shard{position:absolute;opacity:.55;filter:drop-shadow(0 0 10px rgba(159,232,255,.6));
+  background:linear-gradient(135deg,rgba(255,255,255,.85),rgba(159,232,255,.35) 40%,rgba(255,47,179,.35) 80%,rgba(255,255,255,.1));
+  animation:float 14s ease-in-out infinite}
+.shard.s1{width:60px;height:80px;top:8%;left:-14px;clip-path:polygon(50% 0,100% 70%,30% 100%,0 40%)}
+.shard.s2{width:40px;height:56px;top:38%;right:-8px;clip-path:polygon(20% 0,100% 30%,70% 100%,0 80%);animation-delay:-4s}
+.shard.s3{width:30px;height:44px;bottom:18%;left:6%;clip-path:polygon(50% 0,100% 60%,40% 100%,0 50%);animation-delay:-8s}
+.shard.s4{width:50px;height:34px;top:70%;right:12%;clip-path:polygon(0 30%,70% 0,100% 80%,20% 100%);animation-delay:-2s;opacity:.35}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-18px) rotate(8deg)}}
+@media (prefers-reduced-motion:reduce){.shard{animation:none}}
+
+.wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:12px 14px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 2px 10px}
+.brand{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--ice2);opacity:.85}
+.top-actions{display:flex;gap:8px}
+.icon-btn{appearance:none;border:1px solid var(--line);background:var(--glass);color:var(--text);
+  border-radius:12px;height:38px;min-width:38px;padding:0 10px;display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.icon-btn:hover{border-color:rgba(159,232,255,.5)}
+svg.i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.hero{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:14px}
+.flyer{position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(159,232,255,.35);
+  box-shadow:0 0 0 1px rgba(255,47,179,.25),0 20px 60px rgba(255,47,179,.25),0 0 40px rgba(159,232,255,.15);
+  cursor:zoom-in;max-height:300px}
+.flyer img{display:block;width:100%;height:100%;max-height:300px;object-fit:cover;object-position:50% 45%}
+.flyer::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(7,5,13,.85));pointer-events:none}
+.flyer .tap{position:absolute;right:10px;bottom:10px;z-index:2;font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(0,0,0,.5);border:1px solid var(--line);color:var(--ice2)}
+.hero-info{padding:4px 2px}
+h1.title{margin:0;font-family:Georgia,"Noto Serif Display","Times New Roman",serif;font-style:italic;font-weight:800;
+  font-size:clamp(34px,9vw,58px);line-height:1;letter-spacing:-.01em;
+  background:linear-gradient(180deg,#ffffff 0%,var(--ice2) 35%,var(--ice) 60%,#7fb8ff 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 2px 0 var(--magenta)) drop-shadow(0 4px 0 #7a0fa8) drop-shadow(0 0 18px rgba(255,47,179,.55))}
+.title .fest{display:block;font-size:.72em;margin-top:2px;
+  background:linear-gradient(180deg,#fff,var(--pink2) 45%,var(--magenta));-webkit-background-clip:text;background-clip:text}
+.sub{margin:10px 0 0;color:var(--muted);font-size:14px}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:5px 10px;border-radius:999px;
+  border:1px solid rgba(255,47,179,.5);background:rgba(255,47,179,.12);color:#ffd0ef;font-weight:600}
+.badge.ice{border-color:rgba(159,232,255,.5);background:rgba(159,232,255,.1);color:var(--ice2)}
+.badge.tbd{border-color:var(--warn);background:rgba(255,211,107,.12);color:var(--warn)}
+.traveler-bar{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.traveler-bar select{flex:1;min-width:160px}
+
+.card{position:relative;background:linear-gradient(160deg,rgba(255,255,255,.09),rgba(255,255,255,.03));
+  border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 30px rgba(0,0,0,.35)}
+.card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;
+  background:linear-gradient(135deg,rgba(159,232,255,.55),transparent 30%,transparent 70%,rgba(255,47,179,.55));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.card h2{margin:0 0 4px;font-size:19px;display:flex;align-items:center;gap:8px}
+.card h2 svg.i{color:var(--pink2);width:20px;height:20px}
+.card h3{margin:14px 0 8px;font-size:15px;color:var(--ice2)}
+.hint{color:var(--muted);font-size:13px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:560px){.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.02em}
+input,select,textarea{font:inherit;font-size:16px;color:var(--text);background:rgba(10,6,20,.6);
+  border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:10px 12px;width:100%;min-height:44px;outline:none;
+  transition:border-color .15s, box-shadow .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--ice);box-shadow:0 0 0 3px rgba(159,232,255,.18)}
+input[type=checkbox],input[type=radio]{width:20px;height:20px;min-height:0;accent-color:var(--pink);flex:none}
+select{-webkit-appearance:none;appearance:none;padding-right:36px;background-repeat:no-repeat;background-position:right 12px center;background-size:14px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff6fd0' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+select option{background:#150c24;color:var(--text)}
+input::placeholder{color:#7d6d99}
+input[type=date],input[type=time]{color-scheme:dark}
+input:disabled{opacity:.7}
+.check{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text);cursor:pointer;padding:6px 0}
+.btn{appearance:none;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:15px;min-height:44px;padding:10px 16px;border-radius:12px;
+  color:#fff;background:linear-gradient(135deg,var(--pink),var(--magenta));box-shadow:0 6px 20px rgba(255,47,179,.35),inset 0 1px 0 rgba(255,255,255,.35);
+  display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:translateY(1px)}
+.btn.ice{background:linear-gradient(135deg,#bff1ff,#6fcaff);color:#12092a;box-shadow:0 6px 20px rgba(159,232,255,.25),inset 0 1px 0 rgba(255,255,255,.6)}
+.btn.ghost{background:var(--glass);border:1px solid var(--line);box-shadow:none;color:var(--text)}
+.btn.danger{background:rgba(255,107,138,.12);border:1px solid rgba(255,107,138,.5);color:#ffb3c3;box-shadow:none}
+.btn.sm{min-height:34px;padding:6px 10px;font-size:13px;border-radius:10px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row.end{justify-content:flex-end}
+.spacer{flex:1}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{border:1px solid var(--line);background:rgba(10,6,20,.45);border-radius:14px;padding:12px;display:flex;gap:12px;align-items:flex-start}
+.item .main{flex:1;min-width:0}
+.item .t{font-weight:700}
+.m{font-size:13px;color:var(--muted)}
+.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(159,232,255,.12);color:var(--ice2);border:1px solid rgba(159,232,255,.35);vertical-align:middle;white-space:nowrap}
+.pill.pink{background:rgba(255,47,179,.14);color:#ffc6ec;border-color:rgba(255,47,179,.45)}
+.pill.ok{background:rgba(93,255,176,.12);color:var(--ok);border-color:rgba(93,255,176,.4)}
+.pill.warn{background:rgba(255,211,107,.12);color:var(--warn);border-color:rgba(255,211,107,.4)}
+.pill.bad{background:rgba(255,107,138,.12);color:var(--bad);border-color:rgba(255,107,138,.4)}
+.empty{padding:18px;text-align:center;color:var(--muted);border:1px dashed rgba(255,255,255,.18);border-radius:14px;font-size:14px}
+.money{font-variant-numeric:tabular-nums}
+.flight-ico{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none;
+  background:linear-gradient(135deg,rgba(255,47,179,.35),rgba(159,232,255,.25));border:1px solid rgba(255,255,255,.2)}
+.route{font-size:18px;font-weight:800;letter-spacing:.04em}
+.route .arrow{color:var(--pink2);margin:0 6px}
+
+.hotel-opt{border:1px solid var(--line);border-radius:16px;padding:14px;background:rgba(10,6,20,.45);cursor:pointer;display:block;transition:.15s}
+.hotel-opt:hover{border-color:rgba(159,232,255,.45)}
+.hotel-opt.sel{border-color:var(--pink);box-shadow:0 0 0 2px rgba(255,47,179,.35),0 0 30px rgba(255,47,179,.2)}
+.hotel-opt .hn{font-weight:800;font-size:16px}
+.shares{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.share{text-align:center;border-radius:10px;padding:6px 4px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:11px;color:var(--muted)}
+.share b{display:block;color:var(--text);font-size:14px}
+.seg{display:flex;background:rgba(10,6,20,.6);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px;flex-wrap:wrap}
+.seg button{flex:1;min-width:64px;appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-weight:700;font-size:14px;padding:9px 4px;white-space:nowrap;border-radius:9px;cursor:pointer;min-height:40px}
+.seg button.on{background:linear-gradient(135deg,var(--pink),var(--magenta));color:#fff;box-shadow:0 4px 14px rgba(255,47,179,.35)}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{border-radius:14px;padding:10px 6px;background:rgba(10,6,20,.5);border:1px solid var(--line);text-align:center;min-width:0}
+.stat .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.stat .v{font-size:17px;font-weight:800;margin-top:2px}
+.stat.total .v{color:var(--ice2)} .stat.paid .v{color:var(--ok)} .stat.rem .v{color:var(--pink2)}
+.progress{height:14px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid var(--line);margin:12px 0 6px}
+.progress > div{height:100%;width:0;background:linear-gradient(90deg,var(--ice),var(--pink),var(--magenta));box-shadow:0 0 16px rgba(255,47,179,.6);transition:width .5s}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 8px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tfoot td{font-weight:800;border-top:1px solid rgba(159,232,255,.4)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px}
+#rosterTable{min-width:760px}
+.breakdown td{padding:7px 4px}
+#schedTable td:nth-child(2){white-space:nowrap}
+#schedTable th,#schedTable td{padding:8px 5px}
+.hrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) auto;gap:8px;align-items:center}
+
+.day{margin-bottom:14px}
+.day-h{display:flex;align-items:center;gap:8px;margin:0 0 8px;flex-wrap:wrap}
+.day-h .d{font-weight:800;font-size:16px}
+.tl{position:relative;padding-left:22px}
+.tl::before{content:"";position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:linear-gradient(var(--ice),var(--pink));border-radius:2px;opacity:.6}
+.ev{position:relative;margin-bottom:8px;border:1px solid var(--line);background:rgba(10,6,20,.5);border-radius:12px;padding:10px 12px;display:flex;gap:10px;align-items:flex-start}
+.ev::before{content:"";position:absolute;left:-19px;top:15px;width:10px;height:10px;border-radius:50%;background:var(--pink);box-shadow:0 0 10px var(--pink)}
+.ev.auto::before{background:var(--ice);box-shadow:0 0 10px var(--ice)}
+.ev.fest{border-color:rgba(255,47,179,.5);background:rgba(255,47,179,.08)}
+.ev .time{font-weight:800;font-size:13px;color:var(--ice2);min-width:64px;font-variant-numeric:tabular-nums}
+.ev .body{flex:1;min-width:0}
+.ev .body .t{font-weight:700}
+@media(max-width:560px){.ev .actions{flex-direction:column}.ev .actions .btn.sm{min-height:32px;padding:5px 7px}}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;justify-content:space-around;
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  background:rgba(12,7,22,.82);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:1px solid rgba(159,232,255,.25);box-shadow:0 -10px 30px rgba(0,0,0,.4)}
+nav.tabs button{appearance:none;border:0;background:transparent;color:var(--muted);font:inherit;font-size:10.5px;font-weight:700;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;flex:1;border-radius:12px;cursor:pointer;padding:4px 2px;min-width:0}
+nav.tabs button svg.i{width:22px;height:22px}
+nav.tabs button.on{color:#fff;background:linear-gradient(180deg,rgba(255,47,179,.25),rgba(194,28,255,.12))}
+nav.tabs button.on svg.i{color:var(--pink2);filter:drop-shadow(0 0 6px rgba(255,47,179,.8))}
+@media(min-width:900px){
+  body{padding-bottom:40px}
+  .hero{grid-template-columns:320px 1fr;align-items:center}
+  .flyer,.flyer img{max-height:360px}
+  nav.tabs{position:sticky;top:10px;bottom:auto;height:auto;margin:0 auto 14px;max-width:1040px;border-radius:18px;border:1px solid rgba(159,232,255,.25);padding:6px}
+  nav.tabs button{flex-direction:row;font-size:14px;padding:10px 8px;gap:8px}
+  .cols{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start}
+  .toast{bottom:30px}
+}
+.tab{display:none;animation:fade .25s ease}
+.tab.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(5,3,10,.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;overflow-y:auto;padding:16px}
+.overlay.on{display:block}
+.overlay .inner{max-width:760px;margin:0 auto}
+.lightbox{display:none;position:fixed;inset:0;z-index:120;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:12px;cursor:zoom-out}
+.lightbox.on{display:flex}
+.lightbox img{max-width:100%;max-height:100%;border-radius:14px;box-shadow:0 0 60px rgba(255,47,179,.4)}
+.toast{position:fixed;left:50%;bottom:calc(var(--nav-h) + 20px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);opacity:0;z-index:200;
+  background:rgba(20,10,35,.95);border:1px solid rgba(159,232,255,.5);color:var(--text);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;
+  box-shadow:0 10px 30px rgba(0,0,0,.5),0 0 20px rgba(159,232,255,.2);transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.note{font-size:13px;border-left:3px solid var(--pink);background:rgba(255,47,179,.08);padding:10px 12px;border-radius:0 10px 10px 0;color:#f3d7ec;margin:10px 0}
+.note.ice{border-color:var(--ice);background:rgba(159,232,255,.07);color:var(--ice2)}
+.handles{display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:560px){.handles{grid-template-columns:1fr 1fr}}
+.handle{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:rgba(10,6,20,.45)}
+.handle .hm{font-size:12px;color:var(--muted)} .handle .hv{font-weight:800;word-break:break-all}
+details.org{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:rgba(10,6,20,.35)}
+details.org summary{cursor:pointer;font-weight:700}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(min-width:700px){.links{grid-template-columns:repeat(3,1fr)}}
+a.lbtn{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--text);border:1px solid rgba(159,232,255,.3);border-radius:12px;padding:10px 12px;
+  background:linear-gradient(135deg,rgba(159,232,255,.10),rgba(255,47,179,.08));min-height:52px;transition:.15s;position:relative}
+a.lbtn:hover,a.lbtn:focus{border-color:var(--pink);box-shadow:0 0 18px rgba(255,47,179,.25)}
+a.lbtn b{font-size:14px;padding-right:14px}
+a.lbtn small{font-size:11px;color:var(--muted);line-height:1.3}
+a.lbtn::after{content:"↗";position:absolute;right:10px;top:9px;color:var(--pink2);font-weight:800}
+a.lbtn.dim{opacity:.5;pointer-events:none}
+a.lbtn.mini{min-height:0;padding:7px 10px;flex-direction:row;align-items:center}
+a.lbtn.mini b{font-size:12.5px}
+.search-sum{font-size:13px;color:var(--ice2);margin:0 0 10px;display:flex;flex-wrap:wrap;gap:6px}
+.found{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+.savebar{position:fixed;left:10px;right:10px;top:calc(10px + env(safe-area-inset-top));z-index:160;max-width:620px;margin:0 auto;
+  background:rgba(24,10,40,.96);border:1px solid var(--pink);border-radius:16px;padding:12px 14px;font-size:14px;color:var(--text);
+  box-shadow:0 12px 40px rgba(0,0,0,.6),0 0 24px rgba(255,47,179,.3)}
+.savebar[hidden]{display:none}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin:24px 0 8px}
+code{background:rgba(255,255,255,.08);padding:1px 5px;border-radius:5px}
+
+@media print{
+  body{background:#fff !important;color:#000;padding:0}
+  body > *:not(#shareOverlay){display:none !important}
+  #shareOverlay{display:block !important;position:static;background:#fff;padding:0;backdrop-filter:none}
+  #shareOverlay .no-print{display:none !important}
+  .card{background:#fff;border:1px solid #ccc;box-shadow:none;backdrop-filter:none;color:#000;break-inside:avoid}
+  .card::before{display:none}
+  .ev,.item,.stat{background:#fff;border-color:#ccc;color:#000}
+  .ev .time,.m,.hint,th,.stat .k{color:#333 !important}
+  .stat .v{color:#000 !important}
+  h1.title,.title .fest{filter:none;color:#b0108a;-webkit-text-fill-color:#b0108a;background:none}
+  .pill,.pill.pink,.pill.warn,.pill.ok,.pill.bad{border-color:#999 !important;color:#000 !important;background:#f3f3f3 !important}
+  .card h3,.card h2,.day-h .d{color:#b0108a !important}
+  .ev::before{box-shadow:none}
+  .toast,.lightbox{display:none !important}
+  td,th{border-color:#ccc}
+}
+</style>
+</head>
+<body>
+<div class="shards" aria-hidden="true"><div class="shard s1"></div><div class="shard s2"></div><div class="shard s3"></div><div class="shard s4"></div></div>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand" id="brandLine">Lesbian In Dallas presents</div>
+    <div class="top-actions">
+      <button class="icon-btn" id="btnShare" title="Share my itinerary"><svg class="i"><use href="#i-share"/></svg><span>Share</span></button>
+      <button class="icon-btn" id="btnSettings" title="Organizer settings" aria-label="Organizer settings"><svg class="i"><use href="#i-gear"/></svg><span>Organizer</span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="flyer" id="flyer" role="button" aria-label="View flyer full size">
+      <img src="flyer.jpg" alt="Fem Fantasy Fest flyer – Lesbian In Dallas presents, coming June 2027" id="flyerImg">
+      <span class="tap">Tap to view flyer</span>
+    </div>
+    <div class="hero-info">
+      <h1 class="title"><span id="titleMain">Fem Fantasy</span><span class="fest">Fest</span></h1>
+      <p class="sub" id="heroSub">Group trip planner · Dallas, TX</p>
+      <div class="badges" id="heroBadges"></div>
+      <div class="traveler-bar">
+        <select id="travelerSelect" aria-label="Active traveler"></select>
+        <button class="btn sm ghost" id="btnNewTraveler"><svg class="i"><use href="#i-plus"/></svg>New traveler</button>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="me" class="on"><svg class="i"><use href="#i-user"/></svg>Me</button>
+    <button data-tab="flights"><svg class="i"><use href="#i-plane"/></svg>Flights</button>
+    <button data-tab="hotel"><svg class="i"><use href="#i-bed"/></svg>Hotel</button>
+    <button data-tab="itin"><svg class="i"><use href="#i-cal"/></svg>Itinerary</button>
+    <button data-tab="pay"><svg class="i"><use href="#i-wallet"/></svg>Pay</button>
+    <button data-tab="group"><svg class="i"><use href="#i-users"/></svg>Group</button>
+  </nav>
+
+  <section class="tab on" id="tab-me">
+    <div class="card">
+      <h2><svg class="i"><use href="#i-user"/></svg>Traveler profile</h2>
+      <p class="hint">Saved automatically on this device. Each person can use their own phone, or the organizer can add several travelers here.</p>
+      <div class="grid g2">
+        <label class="f">Full name *<input id="p-name" data-p="name" autocomplete="name" placeholder="e.g. Jordan Smith"></label>
+        <label class="f">Phone<input id="p-phone" data-p="phone" type="tel" autocomplete="tel" placeholder="(555) 555-5555"></label>
+        <label class="f">Email<input id="p-email" data-p="email" type="email" autocomplete="email" placeholder="you@example.com"></label>
+        <label class="f">Home city<input id="p-city" data-p="homeCity" placeholder="e.g. Atlanta, GA"></label>
+        <label class="f">Home airport (code)<input id="p-airport" data-p="homeAirport" maxlength="4" placeholder="e.g. ATL" style="text-transform:uppercase"></label>
+        <label class="f">Notes (roommate requests, dietary, etc.)<input id="p-notes" data-p="notes" placeholder="Optional"></label>
+      </div>
+    </div>
+    <div class="card" id="meSummary"></div>
+  </section>
+
+  <section class="tab" id="tab-flights">
+    <div class="card">
+      <h2><svg class="i"><use href="#i-plane"/></svg>My flights</h2>
+      <p class="hint">Add your own arrival into Dallas and your departure home. <b>DFW</b> = Dallas/Fort Worth International · <b>DAL</b> = Dallas Love Field.</p>
+      <div class="list" id="flightList"></div>
+    </div>
+    <div class="card" id="flightSearchCard">
+      <h2><svg class="i"><use href="#i-search"/></svg>Search live flights</h2>
+      <p class="hint">Round trip, prefilled below. Links open in a new tab — once you book, add the flight below.</p>
+      <div class="note live-note"></div>
+      <div class="grid g2">
+        <label class="f">From (your airport)<input id="fs-origin" maxlength="4" placeholder="e.g. ATL" style="text-transform:uppercase"></label>
+        <div><label class="f">To</label>
+          <div class="seg" id="fs-dest-seg" style="margin-top:4px"><button type="button" data-dest="DFW">DFW</button><button type="button" data-dest="DAL">DAL</button><button type="button" data-dest="ANY">Any Dallas</button></div></div>
+        <label class="f">Fly out<input id="fs-out" type="date"></label>
+        <label class="f">Fly home<input id="fs-ret" type="date"></label>
+        <label class="f">Passengers<input id="fs-pax" type="number" min="1" max="9" step="1" inputmode="numeric"></label>
+        <label class="f">Airline site (optional)<select id="fs-airline"></select></label>
+      </div>
+      <div class="links" id="flightSearchLinks" style="margin-top:12px"></div>
+      <p class="m" id="flightSearchHint" style="margin:8px 0 0"></p>
+    </div>
+    <div class="card">
+      <h3 id="flightFormTitle" style="margin-top:0">Add a flight</h3>
+      <form id="flightForm" autocomplete="off">
+        <input type="hidden" id="f-id">
+        <div class="seg" id="f-dir-seg" style="margin-bottom:10px">
+          <button type="button" data-dir="arrival" class="on">Arriving in Dallas</button>
+          <button type="button" data-dir="departure">Leaving Dallas</button>
+        </div>
+        <div class="grid g2" id="f-grid">
+          <label class="f">Airline *<select id="f-airline"></select></label>
+          <label class="f" id="f-other-wrap" style="display:none">Airline name<input id="f-airline-other" placeholder="Airline name"></label>
+          <label class="f">Flight number<input id="f-num" placeholder="e.g. 1234" style="text-transform:uppercase"></label>
+          <label class="f" id="f-from-wrap"><span id="f-from-lbl">From (origin airport)</span><input id="f-from" maxlength="4" placeholder="e.g. ATL" style="text-transform:uppercase"></label>
+          <label class="f" id="f-to-wrap"><span id="f-to-lbl">To (Dallas airport)</span><select id="f-dallas"><option value="DFW">DFW – Dallas/Fort Worth Intl</option><option value="DAL">DAL – Dallas Love Field</option></select></label>
+          <label class="f">Date *<input id="f-date" type="date" required></label>
+          <label class="f">Departure time<input id="f-dep" type="time"></label>
+          <label class="f">Arrival time<input id="f-arr" type="time"></label>
+          <label class="f">Cost (USD)<input id="f-cost" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></label>
+          <label class="f">Confirmation #<input id="f-conf" placeholder="e.g. ABC123" style="text-transform:uppercase"></label>
+        </div>
+        <div class="row end" style="margin-top:12px">
+          <button type="button" class="btn ghost" id="f-cancel" style="display:none">Cancel edit</button>
+          <button class="btn" type="submit" id="f-submit"><svg class="i"><use href="#i-plus"/></svg>Add flight</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-hotel">
+    <div class="card">
+      <h2><svg class="i"><use href="#i-bed"/></svg>Hotel</h2>
+      <p class="hint">Options are set by the organizer. Rates shown are whatever the organizer entered — confirm real rates before booking.</p>
+      <div class="list" id="hotelOptions"></div>
+    </div>
+    <div class="card" id="hotelSearchCard">
+      <h2><svg class="i"><use href="#i-search"/></svg>Search live hotel prices</h2>
+      <p class="hint">Opens each site in a new tab, prefilled with your dates and room-share count. Found a price you like? Enter it under <b>My room → Price I found</b>.</p>
+      <div class="note live-note"></div>
+      <div class="search-sum" id="hotelSearchSum"></div>
+      <div class="links" id="hotelSearchLinks"></div>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">My room</h3>
+      <div class="grid g2">
+        <div>
+          <label class="f">People per room</label>
+          <div class="seg" id="h-share-seg" style="margin-top:4px">
+            <button type="button" data-share="1">Solo</button><button type="button" data-share="2">2</button><button type="button" data-share="3">3</button><button type="button" data-share="4">4</button>
+          </div>
+        </div>
+        <label class="f">Roommates (names)<input id="h-mates" placeholder="Optional"></label>
+        <label class="f">Check-in<input id="h-in" type="date"></label>
+        <label class="f">Check-out<input id="h-out" type="date"></label>
+      </div>
+      <div class="found" style="margin-top:12px">
+        <label class="f" style="flex:1;min-width:140px">Price I found (per night, whole room)<input id="h-found" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Uses organizer rate"></label>
+        <label class="f" style="flex:1;min-width:140px">Where I found it (optional)<input id="h-found-src" placeholder="e.g. Expedia, hotel site"></label>
+        <button type="button" class="btn sm ghost" id="h-found-clear">Use organizer rate</button>
+      </div>
+      <div id="hotelCalc" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-itin">
+    <div class="cols">
+      <div class="card">
+        <h2><svg class="i"><use href="#i-cal"/></svg>Day-by-day</h2>
+        <p class="hint">Flights and hotel check-in/out appear automatically <span class="pill">auto</span>. Festival days are marked (dates TBD until announced).</p>
+        <div id="timeline"></div>
+      </div>
+      <div class="card">
+        <h3 id="itinFormTitle" style="margin-top:0">Add to itinerary</h3>
+        <form id="itinForm" autocomplete="off">
+          <input type="hidden" id="i-id">
+          <div class="grid g2">
+            <label class="f">Date *<input id="i-date" type="date" required></label>
+            <label class="f">Time<input id="i-time" type="time"></label>
+            <label class="f">Type<select id="i-cat">
+              <option value="festival">Festival event</option><option value="dinner">Dinner / food</option>
+              <option value="activity">Activity</option><option value="party">Party / nightlife</option>
+              <option value="travel">Travel / rideshare</option><option value="other">Other</option></select></label>
+            <label class="f">Title *<input id="i-title" required placeholder="e.g. Group brunch"></label>
+            <label class="f">Location<input id="i-loc" placeholder="Optional"></label>
+            <label class="f">Cost per person (optional)<input id="i-cost" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></label>
+          </div>
+          <div class="row end" style="margin-top:12px">
+            <button type="button" class="btn ghost" id="i-cancel" style="display:none">Cancel edit</button>
+            <button class="btn" type="submit" id="i-submit"><svg class="i"><use href="#i-plus"/></svg>Add item</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-pay">
+    <div class="card">
+      <h2><svg class="i"><use href="#i-wallet"/></svg>Trip cost</h2>
+      <div id="costBreakdown"></div>
+      <div class="grid g2" style="margin-top:8px">
+        <label class="check"><input type="checkbox" id="c-flights">Include my flights in the total</label>
+        <label class="check"><input type="checkbox" id="c-itin">Include itinerary item costs</label>
+      </div>
+      <h3>Add-ons</h3>
+      <div class="list" id="addonList"></div>
+      <form id="addonForm" class="row" style="margin-top:8px" autocomplete="off">
+        <input id="a-label" placeholder="e.g. VIP upgrade, shirt, rideshare fund" style="flex:2;min-width:160px">
+        <input id="a-cost" type="number" min="0" step="0.01" inputmode="decimal" placeholder="$" style="flex:1;min-width:80px">
+        <button class="btn sm ice" type="submit">Add</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2><svg class="i"><use href="#i-clock"/></svg>Payment plan</h2>
+      <div class="stats" id="payStats"></div>
+      <div class="progress" aria-label="Payment progress"><div id="payBar"></div></div>
+      <div class="m" id="payProgressText" style="margin-bottom:10px"></div>
+      <label class="f">Plan</label>
+      <div class="seg" id="plan-seg" style="margin-top:4px">
+        <button type="button" data-plan="full">In full</button><button type="button" data-plan="weekly">Weekly</button>
+        <button type="button" data-plan="biweekly">Bi-weekly</button><button type="button" data-plan="monthly">Monthly</button>
+      </div>
+      <div class="grid g2" style="margin-top:10px">
+        <label class="f"><span id="plan-start-lbl">First installment date</span><input id="pl-start" type="date"></label>
+        <label class="f">Final due date (set by organizer)<input id="pl-due" type="date" disabled></label>
+      </div>
+      <label class="check" style="margin-top:6px"><input type="checkbox" id="pl-dep">Pay a deposit first</label>
+      <div class="grid g2" id="pl-dep-fields">
+        <label class="f">Deposit amount<input id="pl-dep-amt" type="number" min="0" step="0.01" inputmode="decimal"></label>
+        <label class="f">Deposit date<input id="pl-dep-date" type="date"></label>
+      </div>
+      <h3>Schedule</h3>
+      <div class="table-wrap"><table id="schedTable"></table></div>
+    </div>
+
+    <div class="card">
+      <h2><svg class="i"><use href="#i-check"/></svg>Log a payment</h2>
+      <p class="hint">Record payments you've sent to the organizer so you can track paid vs. remaining. This app does <b>not</b> process payments.</p>
+      <form id="payForm" autocomplete="off">
+        <div class="grid g4">
+          <label class="f">Amount *<input id="py-amt" type="number" min="0.01" step="0.01" inputmode="decimal" required placeholder="0.00"></label>
+          <label class="f">Date *<input id="py-date" type="date" required></label>
+          <label class="f">Method<select id="py-method"></select></label>
+          <label class="f">Note / ref<input id="py-note" placeholder="Optional"></label>
+        </div>
+        <div class="row end" style="margin-top:10px"><button class="btn" type="submit"><svg class="i"><use href="#i-plus"/></svg>Log payment</button></div>
+      </form>
+      <h3>Payment history</h3>
+      <div class="list" id="payList"></div>
+    </div>
+
+    <div class="card">
+      <h2><svg class="i"><use href="#i-send"/></svg>How to pay the organizer</h2>
+      <div class="note" id="payNote"></div>
+      <div class="handles" id="payHandles"></div>
+    </div>
+  </section>
+
+  <section class="tab" id="tab-group">
+    <div class="card">
+      <h2><svg class="i"><use href="#i-users"/></svg>Group roster</h2>
+      <p class="hint">Built from travelers saved <b>on this device</b> (including any you've imported). Travelers export their plan as a JSON file and send it to the organizer, who imports them here.</p>
+      <div class="table-wrap"><table id="rosterTable"></table></div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn ice sm" id="btnCsv"><svg class="i"><use href="#i-download"/></svg>Export roster CSV</button>
+        <button class="btn ghost sm" id="btnBackup"><svg class="i"><use href="#i-download"/></svg>Export all (backup JSON)</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2><svg class="i"><use href="#i-send"/></svg>Send / collect plans</h2>
+      <div class="row">
+        <button class="btn" id="btnExportMe"><svg class="i"><use href="#i-download"/></svg>Export my plan (JSON)</button>
+        <label class="btn ghost" for="importFile" style="cursor:pointer"><svg class="i"><use href="#i-upload"/></svg>Import JSON</label>
+        <input type="file" id="importFile" accept=".json,application/json" multiple hidden>
+        <button class="btn ghost" id="btnShare2"><svg class="i"><use href="#i-share"/></svg>Share my itinerary</button>
+      </div>
+      <p class="hint" style="margin-top:10px">Import accepts traveler files, full backups, or organizer settings files. A traveler with the same ID is updated instead of duplicated.</p>
+      <details class="org"><summary>Paste JSON instead (e.g. a copied backup)</summary>
+        <textarea id="pasteJson" rows="4" placeholder='Paste backup or traveler JSON here' style="margin-top:8px;font-size:13px"></textarea>
+        <div class="row end" style="margin-top:8px"><button class="btn sm ice" id="btnPasteImport">Import pasted JSON</button></div>
+      </details>
+    </div>
+  </section>
+
+  <div class="footer">Unofficial group-trip planner for Fem Fantasy Fest by Lesbian In Dallas. Prices are placeholders until the organizer updates them.<br>Data is stored only in this browser — export to share or back up.<div id="saveStatus" style="margin-top:6px"></div></div>
+</div>
+
+<div class="overlay" id="settingsOverlay" role="dialog" aria-modal="true" aria-label="Organizer settings">
+  <div class="inner">
+    <div class="row" style="margin-bottom:10px"><h2 style="margin:0;font-size:22px">Organizer settings</h2><span class="spacer"></span><button class="btn ghost sm" data-close="settingsOverlay">Close</button></div>
+    <div class="note ice">These settings are saved on this device. To give everyone the same settings, either edit <code>ORGANIZER_CONFIG</code> at the top of the script in the HTML file before sharing it, or use <b>Export settings</b> and have travelers import that file on the Group tab.</div>
+    <div class="card">
+      <h3 style="margin-top:0">Event</h3>
+      <div class="grid g2">
+        <label class="f">Event name<input id="s-eventName"></label>
+        <label class="f">Host<input id="s-host"></label>
+        <label class="f">City<input id="s-city"></label>
+        <label class="f">Near venue / area for hotel searches (optional)<input id="s-nearArea" placeholder="e.g. Deep Ellum — blank = city"></label>
+        <label class="f">Organizer name<input id="s-organizerName"></label>
+        <label class="f">Festival start<input id="s-festStart" type="date"></label>
+        <label class="f">Festival end<input id="s-festEnd" type="date"></label>
+      </div>
+      <label class="check"><input type="checkbox" id="s-datesTBD">Dates are still TBD (show “TBD” labels)</label>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Package &amp; payments</h3>
+      <div class="grid g2">
+        <label class="f">Package label<input id="s-packageLabel"></label>
+        <label class="f">Package price per person (USD)<input id="s-packagePrice" type="number" min="0" step="0.01"></label>
+        <label class="f">Final payment due date<input id="s-finalDueDate" type="date"></label>
+        <label class="f">Default deposit (USD)<input id="s-depositDefault" type="number" min="0" step="0.01"></label>
+        <label class="f">Hotel tax/fees % (optional)<input id="s-hotelTaxPct" type="number" min="0" step="0.1"></label>
+        <label class="f">Default check-in / check-out times<span class="row"><input id="s-checkInTime" type="time" style="flex:1"><input id="s-checkOutTime" type="time" style="flex:1"></span></label>
+      </div>
+      <label class="check"><input type="checkbox" id="s-pricesAreExamples">Prices are placeholders (show “Example” labels)</label>
+      <label class="f" style="margin-top:6px">Payment note shown to travelers<textarea id="s-paymentNote" rows="3"></textarea></label>
+      <h3>Payment handles</h3>
+      <div class="list" id="s-handles"></div>
+      <button class="btn ghost sm" id="s-addHandle" style="margin-top:8px"><svg class="i"><use href="#i-plus"/></svg>Add handle</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Hotel options</h3>
+      <p class="hint">Per-person share is calculated automatically (nightly room rate ÷ people per room).</p>
+      <div class="list" id="s-hotels"></div>
+      <button class="btn ghost sm" id="s-addHotel" style="margin-top:8px"><svg class="i"><use href="#i-plus"/></svg>Add hotel option</button>
+    </div>
+    <div class="row" style="margin-bottom:30px">
+      <button class="btn" id="s-save">Save settings</button>
+      <button class="btn ghost" id="s-export"><svg class="i"><use href="#i-download"/></svg>Export settings</button>
+      <span class="spacer"></span>
+      <button class="btn danger sm" id="s-reset">Reset to file defaults</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="shareOverlay" role="dialog" aria-modal="true" aria-label="My itinerary summary">
+  <div class="inner">
+    <div class="row no-print" style="margin-bottom:10px">
+      <button class="btn sm" id="sh-print"><svg class="i"><use href="#i-print"/></svg>Print / PDF</button>
+      <button class="btn sm ice" id="sh-copy">Copy text</button>
+      <button class="btn sm ghost" id="sh-native" style="display:none"><svg class="i"><use href="#i-share"/></svg>Share…</button>
+      <span class="spacer"></span>
+      <button class="btn ghost sm" data-close="shareOverlay">Close</button>
+    </div>
+    <div id="shareContent"></div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox"><img alt="Fem Fantasy Fest flyer (full size)"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="savebar" id="saveBanner" role="alert" hidden>
+  <div class="row" style="align-items:flex-start;flex-wrap:nowrap"><span style="font-size:20px;line-height:1">💾</span><p id="saveBannerMsg" style="margin:0;flex:1"></p><button class="icon-btn" id="sb-close" aria-label="Dismiss" style="height:32px;min-width:32px;padding:0">✕</button></div>
+  <div class="row" style="margin-top:10px"><button class="btn sm" id="sb-export">Export backup</button><button class="btn sm ghost" id="sb-copy">Copy backup</button></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="7" r="2.8"/><path d="M16 13.2c3.2-.4 5.8 1.8 5.8 5.3"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 18V6M3 14h18v4M21 14v-3a3 3 0 0 0-3-3h-7v6"/><circle cx="7" cy="11" r="2"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="3"/><path d="M3 10h18M16 15h2"/><path d="M6 6l9-3 1 3"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 21V9M7 14l5-5 5 5M4 3h16"/></symbol>
+  <symbol id="i-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></symbol>
+</svg>
+<script>
+/* =====================================================================
+   ORGANIZER CONFIG — edit these defaults before sharing the file.
+   They can also be changed in-app via "Organizer" settings; in-app
+   changes are stored per device and override these values.
+   ALL PRICES BELOW ARE PLACEHOLDER EXAMPLES — NOT REAL QUOTES.
+   ===================================================================== */
+const ORGANIZER_CONFIG = {
+  eventName: "Fem Fantasy Fest",
+  host: "Lesbian In Dallas",
+  city: "Dallas, TX",
+  nearArea: "",                   // optional "near venue/area" for hotel searches, e.g. "Deep Ellum" (blank = whole city)
+  organizerName: "Trip Organizer",
+  datesTBD: true,                 // exact dates not announced yet
+  festStart: "2027-06-11",        // PLACEHOLDER June 2027 weekend (TBD) – replace when announced
+  festEnd:   "2027-06-13",        // PLACEHOLDER
+  packageLabel: "Festival ticket / group package",
+  packagePrice: 150,              // EXAMPLE placeholder – replace
+  pricesAreExamples: true,        // shows "Example" labels next to prices
+  finalDueDate: "2027-05-01",     // everything paid by this date
+  depositDefault: 50,             // EXAMPLE placeholder
+  hotelTaxPct: 0,                 // optional % added to hotel cost (0 = none)
+  checkInTime: "15:00",
+  checkOutTime: "11:00",
+  paymentNote: "Payments go directly to the trip organizer, not through this app. Put your name + \"Fem Fantasy Fest\" in the payment note, then log it here on the Pay tab.",
+  paymentHandles: [
+    { method: "Cash App", handle: "$YourCashtag (placeholder)" },
+    { method: "Zelle",    handle: "organizer@example.com (placeholder)" },
+    { method: "PayPal",   handle: "paypal.me/placeholder" },
+    { method: "Venmo",    handle: "@placeholder-venmo" }
+  ],
+  hotels: [
+    { id: "h1", name: "Example – replace: Hotel Option A", area: "Downtown Dallas (example)",  nightly: 180, link: "", notes: "Placeholder rate – replace with a real quote" },
+    { id: "h2", name: "Example – replace: Hotel Option B", area: "Uptown (example)",           nightly: 220, link: "", notes: "Placeholder rate – replace with a real quote" },
+    { id: "h3", name: "Example – replace: Hotel Option C", area: "Near DFW Airport (example)", nightly: 130, link: "", notes: "Placeholder rate – replace with a real quote" }
+  ]
+};
+
+const AIRLINES = ["American Airlines","Delta Air Lines","United Airlines","Southwest Airlines","Alaska Airlines","JetBlue","Spirit Airlines","Frontier Airlines","Allegiant Air","Hawaiian Airlines","Sun Country Airlines","Breeze Airways","Other"];
+const PAY_METHODS = ["Cash App","Zelle","PayPal","Venmo","Apple Cash","Cash","Other"];
+const CAT_ICON = {festival:"🎉",dinner:"🍽️",activity:"✨",party:"🪩",travel:"🚗",other:"📌",flight:"✈️",hotel:"🏨"};
+const PLAN_NAMES = {full:"Pay in full",weekly:"Weekly",biweekly:"Bi-weekly",monthly:"Monthly"};
+const K_CFG = "fft.v1.config", K_TRAV = "fft.v1.travelers", K_ACTIVE = "fft.v1.active";
+
+/* ---------------- utilities ---------------- */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-4);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
+const r2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
+const USD = new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"});
+const fmtUSD = n => USD.format(r2(n||0));
+const pad = n => String(n).padStart(2,"0");
+const toISO = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseD = s => { if(!s) return null; const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const todayISO = () => toISO(new Date());
+const addDays = (s, n) => { const d = parseD(s); d.setDate(d.getDate()+n); return toISO(d); };
+const addMonths = (s, n) => { const d = parseD(s); const day = d.getDate(); const t = new Date(d.getFullYear(), d.getMonth()+n, 1); const last = new Date(t.getFullYear(), t.getMonth()+1, 0).getDate(); t.setDate(Math.min(day,last)); return toISO(t); };
+const daysBetween = (a, b) => Math.round((parseD(b) - parseD(a)) / 864e5);
+const fmtDate = (s, opts={weekday:"short",month:"short",day:"numeric"}) => s ? parseD(s).toLocaleDateString("en-US", opts) : "—";
+const fmtDateY = s => fmtDate(s,{month:"short",day:"numeric",year:"numeric"});
+const fmtTime = t => { if(!t) return ""; let [h,m] = t.split(":").map(Number); const ap = h>=12?"PM":"AM"; h = h%12||12; return `${h}:${pad(m)} ${ap}`; };
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("on"),2600); }
+function download(name, text, type="application/json"){
+  try{ const b=new Blob([text],{type}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ try{ URL.revokeObjectURL(a.href); }catch(e){} a.remove(); },1500); return true; }
+  catch(e){ toast("This viewer can't download files — use Copy backup instead"); return false; }
+}
+function copyText(text, okMsg){
+  const fallback = () => { try{ const ta=document.createElement("textarea"); ta.value=text; ta.setAttribute("readonly",""); ta.style.cssText="position:fixed;top:0;left:0;opacity:0"; document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length); const ok=document.execCommand("copy"); ta.remove(); toast(ok ? okMsg : "Couldn't copy — try Export instead"); }catch(e){ toast("Couldn't copy — try Export instead"); } };
+  try{ if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(text).then(()=>toast(okMsg), fallback); return; } }catch(e){}
+  fallback();
+}
+const slug = s => (s||"traveler").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "traveler";
+const icon = id => `<svg class="i"><use href="#${id}"/></svg>`;
+
+/* ---------------- safe storage layer ----------------
+   localStorage → sessionStorage → IndexedDB (async) → in-memory.
+   Never throws: a failed write keeps the value in memory and raises ONE banner. */
+const Store = (() => {
+  const mem = Object.create(null);
+  const st = { kind: "memory", reason: "", detectError: "" };
+  const listeners = [];
+  let sync = null, idb = null, idbPending = false;
+  const isQuota = e => !!e && (e.name === "QuotaExceededError" || e.name === "NS_ERROR_DOM_QUOTA_REACHED" || e.code === 22 || e.code === 1014);
+  const errName = e => (e && (e.name || e.message)) || String(e);
+  function probe(getter){
+    try{
+      const s = getter(); if(!s) return null;
+      const k = "__fft_probe__"; s.setItem(k, "1"); const ok = s.getItem(k) === "1"; s.removeItem(k);
+      return ok ? s : null;
+    }catch(e){ st.detectError = errName(e); return null; }
+  }
+  sync = probe(() => window.localStorage);
+  if(sync) st.kind = "localStorage";
+  else { sync = probe(() => window.sessionStorage); if(sync) st.kind = "sessionStorage"; }
+  if(sync){ try{ for(let i = 0; i < sync.length; i++){ const k = sync.key(i); if(k && k.indexOf("fft.") === 0) mem[k] = sync.getItem(k); } }catch(e){} }
+  function fail(reason, e){ st.reason = reason; st.lastError = errName(e); listeners.forEach(fn => { try{ fn(reason, e); }catch(_){} }); }
+  function idbWrite(k, v){
+    try{
+      const tx = idb.transaction("kv", "readwrite");
+      if(v == null) tx.objectStore("kv").delete(k); else tx.objectStore("kv").put(v, k);
+      tx.onerror = tx.onabort = () => fail(isQuota(tx.error) ? "quota" : "blocked", tx.error);
+    }catch(e){ fail(isQuota(e) ? "quota" : "blocked", e); }
+  }
+  function initIDB(){
+    return new Promise(resolve => {
+      idbPending = true;
+      let done = false; const finish = v => { if(!done){ done = true; idbPending = false; resolve(v); } };
+      setTimeout(() => finish(false), 2500);
+      try{
+        if(!window.indexedDB) return finish(false);
+        const req = indexedDB.open("fft-planner", 1);
+        req.onupgradeneeded = () => { try{ req.result.createObjectStore("kv"); }catch(e){} };
+        req.onerror = req.onblocked = () => finish(false);
+        req.onsuccess = () => {
+          const db = req.result;
+          try{
+            const out = {}; const tx = db.transaction("kv", "readwrite"); const os = tx.objectStore("kv");
+            os.put("1", "__fft_probe__");
+            os.openCursor().onsuccess = ev => { const c = ev.target.result; if(c){ if(String(c.key).indexOf("fft.") === 0) out[c.key] = c.value; c.continue(); } };
+            tx.oncomplete = () => {
+              idb = db; st.kind = "indexedDB"; st.reason = "";
+              Object.keys(out).forEach(k => { if(!(k in mem)) mem[k] = out[k]; });   // keep anything newer from this session
+              Object.keys(mem).forEach(k => idbWrite(k, mem[k]));
+              finish(true);
+            };
+            tx.onerror = tx.onabort = () => finish(false);
+          }catch(e){ finish(false); }
+        };
+      }catch(e){ finish(false); }
+    });
+  }
+  return {
+    get kind(){ return st.kind; }, get reason(){ return st.reason; }, get detectError(){ return st.detectError; },
+    persistent(){ return (st.kind === "localStorage" || st.kind === "indexedDB") && !st.reason; },
+    onFail(fn){ listeners.push(fn); },
+    get(k){ return k in mem ? mem[k] : null; },
+    set(k, v){
+      if(mem[k] === v && !st.reason) return true;
+      mem[k] = v;
+      if(sync){ try{ sync.setItem(k, v); if(st.reason) st.reason = ""; return true; }catch(e){ fail(isQuota(e) ? "quota" : "blocked", e); return false; } }
+      if(idb){ idbWrite(k, v); return true; }
+      if(!st.reason && !idbPending) fail("unavailable", null);
+      return false;
+    },
+    remove(k){ delete mem[k]; if(sync){ try{ sync.removeItem(k); }catch(e){} } if(idb) idbWrite(k, null); },
+    bytes(){ return Object.keys(mem).reduce((n, k) => n + k.length + String(mem[k]).length, 0); },
+    initIDB
+  };
+})();
+function load(k, fb){ const v = Store.get(k); if(v == null || v === "") return fb; try{ return JSON.parse(v); }catch(e){ return fb; } }
+function save(k, v){ let s; try{ s = JSON.stringify(v); }catch(e){ console.warn("Not saved (unserializable)", k, e); return false; } return Store.set(k, s); }
+function mergeCfg(o){
+  const base = JSON.parse(JSON.stringify(ORGANIZER_CONFIG)); if(!o) return base;
+  return Object.assign(base, o, { hotels: Array.isArray(o.hotels) ? o.hotels : base.hotels, paymentHandles: Array.isArray(o.paymentHandles) ? o.paymentHandles : base.paymentHandles });
+}
+let cfg = mergeCfg(load(K_CFG, null));
+function newTraveler(name=""){
+  return { id: uid(), name, phone:"", email:"", homeCity:"", homeAirport:"", notes:"",
+    flights: [], hotel: { optionId:"", share:2, checkIn:"", checkOut:"", roommates:"", snapshotName:"", snapshotNightly:0, foundNightly:"", foundSource:"" },
+    flightSearch: {},
+    itinerary: [], addons: [], includePackage: true, includeFlights: false, includeItin: true,
+    plan: { type:"monthly", startDate:"", useDeposit:true, deposit:null, depositDate:"" },
+    payments: [], updatedAt: new Date().toISOString() };
+}
+function normTraveler(t){
+  const src = t || {}; const o = Object.assign(newTraveler(), src);
+  o.hotel = Object.assign(newTraveler().hotel, src.hotel || {});
+  o.plan = Object.assign(newTraveler().plan, src.plan || {});
+  ["flights","itinerary","addons","payments"].forEach(k => { if(!Array.isArray(o[k])) o[k] = []; });
+  if(!o.flightSearch || typeof o.flightSearch !== "object") o.flightSearch = {};
+  if(!o.id) o.id = uid();
+  return o;
+}
+let travelers = (load(K_TRAV, []) || []).map(normTraveler);
+if(!travelers.length) travelers = [newTraveler()];
+let activeId = load(K_ACTIVE, null);
+if(!travelers.find(t=>t.id===activeId)) activeId = travelers[0].id;
+const T = () => travelers.find(t => t.id === activeId);
+function persist(){ const t=T(); if(t) t.updatedAt = new Date().toISOString(); save(K_TRAV, travelers); save(K_ACTIVE, activeId); renderSaveStatus(); }
+function reloadStateFromStore(){
+  cfg = mergeCfg(load(K_CFG, null));
+  travelers = (load(K_TRAV, []) || []).map(normTraveler); if(!travelers.length) travelers = [newTraveler()];
+  activeId = load(K_ACTIVE, null); if(!travelers.find(t=>t.id===activeId)) activeId = travelers[0].id;
+}
+
+/* ---------------- calculations ---------------- */
+function hotelOpt(t){ return cfg.hotels.find(h => h.id === t.hotel.optionId) || null; }
+function hotelNights(t){ const {checkIn, checkOut} = t.hotel; if(!checkIn || !checkOut) return 0; return Math.max(0, daysBetween(checkIn, checkOut)); }
+function hotelCalc(t){
+  const opt = hotelOpt(t);
+  const baseNightly = opt ? num(opt.nightly) : num(t.hotel.snapshotNightly);
+  const found = num(t.hotel.foundNightly);
+  const usingFound = found > 0;
+  const nightly = usingFound ? found : baseNightly;
+  const name = opt ? opt.name : (t.hotel.snapshotName || "");
+  const share = Math.max(1, parseInt(t.hotel.share) || 1);
+  const nights = hotelNights(t);
+  const room = r2(nightly * nights * (1 + num(cfg.hotelTaxPct)/100));
+  return { name, nightly, baseNightly, usingFound, share, nights, room, perPerson: r2(room / share), has: !!(name && t.hotel.optionId), area: opt ? opt.area : "" };
+}
+const sumBy = (arr, k) => r2(arr.reduce((s,x)=>s+num(x[k]),0));
+const flightsTotal = t => sumBy(t.flights, "cost");
+const itinTotal = t => sumBy(t.itinerary, "cost");
+const addonsTotal = t => sumBy(t.addons, "cost");
+const paidTotal = t => sumBy(t.payments, "amount");
+function costLines(t){
+  const h = hotelCalc(t);
+  return [
+    { key:"pkg", label: cfg.packageLabel, amount: t.includePackage ? num(cfg.packagePrice) : 0, example: cfg.pricesAreExamples },
+    { key:"hotel", label: h.has ? `Hotel share (${h.nights} night${h.nights===1?"":"s"}, ${h.share}/room${h.usingFound?", price I found":""})` : "Hotel share (pick a hotel)", amount: h.perPerson, example: cfg.pricesAreExamples && h.has && !h.usingFound },
+    { key:"flights", label: `My flights (${t.flights.length})`, amount: t.includeFlights ? flightsTotal(t) : 0, off: t.includeFlights ? "" : `not included · ${fmtUSD(flightsTotal(t))} entered` },
+    { key:"itin", label: "Itinerary extras", amount: t.includeItin ? itinTotal(t) : 0, off: t.includeItin ? "" : `not included · ${fmtUSD(itinTotal(t))} entered` },
+    { key:"addons", label: `Add-ons (${t.addons.length})`, amount: addonsTotal(t) }
+  ];
+}
+const tripTotal = t => r2(costLines(t).reduce((s,l)=>s+l.amount,0));
+function depositAmt(t, total){ if(!t.plan.useDeposit) return 0; const d = (t.plan.deposit==null || t.plan.deposit==="") ? num(cfg.depositDefault) : num(t.plan.deposit); return r2(Math.min(Math.max(0,d), total)); }
+function planDates(type, start, due){
+  const out = []; if(!start || !due) return out;
+  if(type === "monthly"){ for(let i=0; i<=60; i++){ const d = addMonths(start, i); if(d > due) break; out.push(d); } }
+  else { const step = type === "weekly" ? 7 : 14; for(let d=start, i=0; d <= due && i < 260; d = addDays(d, step), i++) out.push(d); }
+  return out;
+}
+function defaultStart(t){
+  const today = todayISO(), dep = t.plan.useDeposit && depositAmt(t, tripTotal(t)) > 0;
+  if(t.plan.type === "full") return dep ? (t.plan.depositDate || today) : today;
+  if(!dep) return today;
+  const d0 = t.plan.depositDate || today;
+  return t.plan.type === "monthly" ? addMonths(d0, 1) : addDays(d0, t.plan.type === "weekly" ? 7 : 14);
+}
+function buildSchedule(t){
+  const total = tripTotal(t); const due = cfg.finalDueDate; const today = todayISO();
+  const rows = [];
+  const dep = depositAmt(t, total);
+  if(dep > 0) rows.push({ date: t.plan.depositDate || today, amount: dep, label: "Deposit" });
+  const rest = r2(total - dep);
+  if(rest > 0){
+    const start = t.plan.startDate || defaultStart(t);
+    if(t.plan.type === "full"){ rows.push({ date: start, amount: rest, label: dep > 0 ? "Balance in full" : "Pay in full" }); }
+    else {
+      let dates = planDates(t.plan.type, start, due);
+      if(!dates.length) dates = [start > due ? start : due];
+      const n = dates.length; const base = Math.floor(rest / n * 100) / 100;
+      dates.forEach((d,i) => rows.push({ date: d, amount: i === n-1 ? r2(rest - base*(n-1)) : base, label: `Installment ${i+1} of ${n}` }));
+    }
+  }
+  // Apply logged payments to scheduled rows in order
+  let pool = paidTotal(t);
+  rows.forEach(r => {
+    const applied = r2(Math.min(r.amount, Math.max(0, pool))); pool = r2(pool - applied);
+    r.applied = applied;
+    r.status = applied >= r.amount - 0.004 ? "paid" : applied > 0 ? "partial" : (r.date < today ? "overdue" : "upcoming");
+    r.late = r.date > due;
+  });
+  return { rows, total, dep, rest };
+}
+const byWhen = (f, which) => (f.date||"") + (f[which]||"");
+function arrivalFlight(t){ return t.flights.filter(f=>f.dir==="arrival").sort((a,b)=>byWhen(a,"arr").localeCompare(byWhen(b,"arr")))[0] || null; }
+function departureFlight(t){ return t.flights.filter(f=>f.dir==="departure").sort((a,b)=>byWhen(b,"dep").localeCompare(byWhen(a,"dep")))[0] || null; }
+const airlineName = f => f ? (f.airline === "Other" ? (f.airlineOther || "Other airline") : f.airline) : "";
+const flightCode = f => { const a = airlineName(f); const n = (f.num||"").trim(); return n ? `${a} ${n}` : a; };
+
+function timelineEvents(t){
+  const ev = [];
+  t.flights.forEach(f => {
+    if(!f.date) return;
+    const conf = f.conf ? ` · Conf ${f.conf}` : "";
+    if(f.dir === "arrival") ev.push({ auto:true, cat:"flight", date:f.date, time:f.arr || f.dep || "", title:`Land at ${f.to} — ${flightCode(f)}`, loc:`From ${f.from||"?"}${f.dep?` · departs ${fmtTime(f.dep)}`:""}${conf}` });
+    else ev.push({ auto:true, cat:"flight", date:f.date, time:f.dep || "", title:`Fly home from ${f.from} — ${flightCode(f)}`, loc:`To ${f.to||"?"}${f.arr?` · arrives ${fmtTime(f.arr)}`:""}${conf}` });
+  });
+  const h = hotelCalc(t);
+  if(h.has && t.hotel.checkIn) ev.push({ auto:true, cat:"hotel", date:t.hotel.checkIn, time:cfg.checkInTime, title:`Hotel check-in — ${h.name}`, loc: h.area || "" });
+  if(h.has && t.hotel.checkOut) ev.push({ auto:true, cat:"hotel", date:t.hotel.checkOut, time:cfg.checkOutTime, title:`Hotel check-out — ${h.name}`, loc:"" });
+  t.itinerary.forEach(i => ev.push({ auto:false, id:i.id, cat:i.cat||"other", date:i.date, time:i.time||"", title:i.title, loc:i.loc||"", cost:num(i.cost) }));
+  return ev.filter(e=>e.date).sort((a,b)=> (a.date+(a.time||"99:99")).localeCompare(b.date+(b.time||"99:99")));
+}
+function tripDays(t){
+  const dates = timelineEvents(t).map(e=>e.date).concat([cfg.festStart, cfg.festEnd]).filter(Boolean).sort();
+  if(!dates.length) return [];
+  const s = dates[0], e = dates[dates.length-1];
+  if(daysBetween(s,e) > 21) return Array.from(new Set(dates)); // avoid huge empty ranges
+  const out = []; for(let d=s; d<=e; d=addDays(d,1)) out.push(d); return out;
+}
+const isFestDay = d => !!(cfg.festStart && cfg.festEnd && d >= cfg.festStart && d <= cfg.festEnd);
+
+/* ---------------- live search deep links (no API keys; verified formats Sep 2026) ---------------- */
+const LIVE_NOTE = "Prices for June 2027 may not be available yet; hotels usually open ~1 year out, airlines ~11 months.";
+const enc = encodeURIComponent;
+const longDate = s => parseD(s).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+const mdy = s => { const [y,m,d] = s.split("-"); return `${m}/${d}/${y}`; };
+const isExampleName = n => /example/i.test(n || "");
+function hotelSearchParams(t){
+  const af = arrivalFlight(t), df = departureFlight(t);
+  const ci = t.hotel.checkIn || (af && af.date) || addDays(cfg.festStart,-1);
+  let co = t.hotel.checkOut || (df && df.date) || addDays(cfg.festEnd,1);
+  if(!co || co <= ci) co = addDays(ci,1);
+  const city = (cfg.city || "").trim() || "Dallas, TX";
+  const area = (cfg.nearArea || "").trim();
+  const where = area ? (/dallas/i.test(area) ? area : `${area}, ${city}`) : city;
+  // Expedia/Hotels.com resolve "Dallas, TX" to the DFW-airports region; "Dallas, Texas" resolves to the city
+  const expWhere = where.replace(/,\s*TX\b/i, ", Texas"), expCity = city.replace(/,\s*TX\b/i, ", Texas");
+  // Booking.com bounced "Deep Ellum, Dallas, TX" to its homepage but accepts "Deep Ellum, Dallas" (city "Dallas, TX" is fine)
+  const bookWhere = area ? where.replace(/,\s*TX\b/i, "") : city;
+  return { ci, co, guests: Math.max(1, parseInt(t.hotel.share) || 1), city, area, where, expWhere, expCity, bookWhere };
+}
+function hotelSearchLinks(t){
+  const p = hotelSearchParams(t), g = p.guests, adults = `${g} adult${g>1?"s":""}`;
+  const kayakCity = /dallas/i.test(p.city) ? "Dallas,TX-c16406" : enc(p.city.replace(/\s+/g,""));
+  const L = [
+    // Google parses dates from natural language when the place is a city; guest count stays at Google's default (2)
+    { site:"Google Hotels", sub:`${p.city} · dates`, url:`https://www.google.com/travel/search?q=${enc(`Hotels in ${p.city} from ${longDate(p.ci)} to ${longDate(p.co)} for ${adults}`)}` },
+    { site:"Expedia", sub:`${p.area||p.city} · dates · ${g} guest${g>1?"s":""}`, url:`https://www.expedia.com/Hotel-Search?destination=${enc(p.expWhere)}&startDate=${p.ci}&endDate=${p.co}&adults=${g}&rooms=1` },
+    { site:"Booking.com", sub:`${p.area||p.city} · dates · ${g} guest${g>1?"s":""}`, url:`https://www.booking.com/searchresults.html?ss=${enc(p.bookWhere)}&checkin=${p.ci}&checkout=${p.co}&group_adults=${g}&no_rooms=1&group_children=0` },
+    { site:"Kayak", sub:`${p.city} · dates · ${g} guest${g>1?"s":""}`, url:`https://www.kayak.com/hotels/${kayakCity}/${p.ci}/${p.co}/${g}adults` },
+    { site:"Hotels.com", sub:`${p.area||p.city} · dates · ${g} guest${g>1?"s":""}`, url:`https://www.hotels.com/Hotel-Search?destination=${enc(p.expWhere)}&startDate=${p.ci}&endDate=${p.co}&adults=${g}&rooms=1` },
+    { site:"Airbnb", sub:`${p.area||p.city} · dates · ${g} guest${g>1?"s":""}`, url:`https://www.airbnb.com/s/homes?query=${enc(p.where)}&checkin=${p.ci}&checkout=${p.co}&adults=${g}` }
+  ];
+  // Google drops the dates when a neighborhood is in the query, so offer the area as a separate link
+  if(p.area) L.splice(1, 0, { site:`Google Hotels · ${p.area}`, sub:"area only · set dates there", url:`https://www.google.com/travel/search?q=${enc(`Hotels in ${p.where}`)}` });
+  return L;
+}
+function hotelOptionLinks(t, h){
+  const p = hotelSearchParams(t), g = p.guests;
+  if(isExampleName(h.name)) return [
+    { site:"Google Hotels", url:`https://www.google.com/travel/search?q=${enc(`Hotels in ${p.city} from ${longDate(p.ci)} to ${longDate(p.co)} for ${g} adult${g>1?"s":""}`)}` },
+    { site:"Expedia", url:`https://www.expedia.com/Hotel-Search?destination=${enc(p.expCity)}&startDate=${p.ci}&endDate=${p.co}&adults=${g}&rooms=1` } ];
+  return [
+    // opens the hotel's own Google Hotels page (pick dates there — Google ignores date text for a named hotel)
+    { site:"Google Hotels", url:`https://www.google.com/travel/search?q=${enc(`${h.name}, ${p.city}`)}` },
+    // Expedia: city + dates + guests, with the property-name filter prefilled
+    { site:"Expedia", url:`https://www.expedia.com/Hotel-Search?destination=${enc(p.expCity)}&hotelName=${enc(h.name)}&startDate=${p.ci}&endDate=${p.co}&adults=${g}&rooms=1` } ];
+}
+const AIRLINE_SITES = {
+  "American Airlines":"https://www.aa.com/", "Delta Air Lines":"https://www.delta.com/", "United Airlines":"https://www.united.com/",
+  "Southwest Airlines":"https://www.southwest.com/", "Alaska Airlines":"https://www.alaskaair.com/", "JetBlue":"https://www.jetblue.com/",
+  "Spirit Airlines":"https://www.spirit.com/", "Frontier Airlines":"https://www.flyfrontier.com/", "Allegiant Air":"https://www.allegiantair.com/",
+  "Hawaiian Airlines":"https://www.hawaiianairlines.com/", "Sun Country Airlines":"https://www.suncountry.com/", "Breeze Airways":"https://www.flybreeze.com/" };
+const GF_DEST = { DFW:"Dallas/Fort Worth International Airport", DAL:"Dallas Love Field", ANY:"Dallas" }; // Google misreads the bare code "DAL"
+function flightSearchState(t){
+  const s = t.flightSearch || {}, af = arrivalFlight(t), df = departureFlight(t);
+  let out = s.out || (af && af.date) || addDays(cfg.festStart,-1);
+  let ret = s.ret || (df && df.date) || addDays(cfg.festEnd,1);
+  return { origin: String(s.origin != null && s.origin !== "" ? s.origin : (t.homeAirport || "")).toUpperCase().trim(),
+    dest: s.dest || (af && ["DFW","DAL"].includes(af.to) ? af.to : "DFW"), out, ret,
+    pax: Math.min(9, Math.max(1, parseInt(s.pax) || 1)), airline: s.airline != null ? s.airline : (af && af.airline !== "Other" ? af.airline : "") };
+}
+function flightSearchLinks(t){
+  const s = flightSearchState(t); const o = s.origin; if(!/^[A-Z]{3}$/.test(o)) return { links: [], s };
+  const one = s.dest === "ANY" ? "DFW" : s.dest, pax = s.pax;
+  const links = [
+    { site:"Google Flights", sub:`${o} → ${s.dest==="ANY"?"Dallas (all)":s.dest} · dates · ${pax} adult${pax>1?"s":""}`, url:`https://www.google.com/travel/flights?q=${enc(`Flights to ${GF_DEST[s.dest]} from ${o} on ${s.out} through ${s.ret}${pax>1?` for ${pax} adults`:""}`)}` },
+    { site:"Kayak", sub:`${o} → ${s.dest==="ANY"?"DFW + DAL":s.dest} · dates · ${pax} adult${pax>1?"s":""}`, url:`https://www.kayak.com/flights/${o}-${s.dest==="ANY"?"DFW,DAL":s.dest}/${s.out}/${s.ret}/${pax}adults?sort=bestflight_a` },
+    { site:"Expedia", sub:`${o} → ${one}${s.dest==="ANY"?" (pick DAL there too)":""} · dates · ${pax}`, url:`https://www.expedia.com/Flights-Search?trip=roundtrip&leg1=${enc(`from:${o},to:${one},departure:${mdy(s.out)}TANYT`)}&leg2=${enc(`from:${one},to:${o},departure:${mdy(s.ret)}TANYT`)}&passengers=${enc(`adults:${pax},children:0,seniors:0,infantinlap:Y`)}&options=${enc("cabinclass:economy")}&mode=search` }
+  ];
+  const a = s.airline;
+  if(a === "Southwest Airlines"){ const d = s.dest === "ANY" ? "DAL" : s.dest;
+    links.push({ site:"Southwest", sub:`${o} → ${d} · dates · ${pax}`, url:`https://www.southwest.com/air/booking/select.html?originationAirportCode=${o}&destinationAirportCode=${d}&returnAirportCode=&departureDate=${s.out}&departureTimeOfDay=ALL_DAY&returnDate=${s.ret}&returnTimeOfDay=ALL_DAY&adultPassengersCount=${pax}&tripType=roundtrip&fareType=USD&passengerType=ADULT&reset=true` }); }
+  else if(a === "United Airlines") links.push({ site:"United", sub:`${o} → ${one} · dates · ${pax}`, url:`https://www.united.com/en/us/fsr/choose-flights?f=${o}&t=${one}&d=${s.out}&r=${s.ret}&px=${pax}&taxng=1&newHP=True&clm=7&st=bestmatches&tqp=R` });
+  else if(a === "Delta Air Lines") links.push({ site:"Delta", sub:`${o} → ${one} · dates · ${pax}`, url:`https://www.delta.com/flight-search/book-a-flight?tripType=ROUND_TRIP&originCity=${o}&destinationCity=${one}&departureDate=${s.out}&returnDate=${s.ret}&paxCount=${pax}` });
+  else if(AIRLINE_SITES[a]) links.push({ site: a.replace(/ (Airlines|Air Lines|Airways|Air)$/,""), sub:"airline homepage · enter search there", url: AIRLINE_SITES[a] });
+  return { links, s };
+}
+const linkBtn = (l, cls="") => `<a class="lbtn ${cls}" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer" data-site="${esc(l.site)}"><b>${esc(l.site)}</b>${l.sub?`<small>${esc(l.sub)}</small>`:""}</a>`;
+/* ---------------- rendering ---------------- */
+const tbd = () => cfg.datesTBD ? ` <span class="pill warn">TBD</span>` : "";
+const exPill = (txt="Example") => cfg.pricesAreExamples ? ` <span class="pill warn">${txt}</span>` : "";
+const setVal = (sel, v) => { const el = $(sel); if(el && document.activeElement !== el) el.value = v ?? ""; };
+
+function renderHeader(){
+  $("#brandLine").textContent = `${cfg.host} presents`;
+  const words = (cfg.eventName||"").trim().split(/\s+/); const last = words.length>1 ? words.pop() : "";
+  $("#titleMain").textContent = words.join(" "); $(".title .fest").textContent = last;
+  $("#heroSub").textContent = `Group trip planner · ${cfg.city}`;
+  const fest = `${fmtDate(cfg.festStart,{month:"short",day:"numeric"})}–${fmtDate(cfg.festEnd,{month:"short",day:"numeric",year:"numeric"})}`;
+  const dleft = cfg.festStart ? daysBetween(todayISO(), cfg.festStart) : 0;
+  $("#heroBadges").innerHTML =
+    (cfg.datesTBD ? `<span class="badge tbd">June 2027 · exact dates TBD</span><span class="badge ice">Placeholder: ${esc(fest)}</span>` : `<span class="badge">${esc(fest)}</span>`) +
+    `<span class="badge ice">${esc(cfg.city)}</span>` +
+    (dleft > 0 ? `<span class="badge">${cfg.datesTBD?"~":""}${dleft} days to go</span>` : "") +
+    `<span class="badge">Pay by ${esc(fmtDateY(cfg.finalDueDate))}</span>`;
+  $("#travelerSelect").innerHTML = travelers.map(t => `<option value="${esc(t.id)}" ${t.id===activeId?"selected":""}>${esc(t.name || "Unnamed traveler")}</option>`).join("") + `<option value="__del">— Remove this traveler from device…</option>`;
+}
+
+function renderMe(){
+  const t = T();
+  $$("[data-p]").forEach(el => { if(document.activeElement !== el) el.value = t[el.dataset.p] || ""; });
+  const s = buildSchedule(t); const paid = paidTotal(t); const af = arrivalFlight(t); const h = hotelCalc(t);
+  const next = s.rows.find(r => r.status !== "paid");
+  $("#meSummary").innerHTML = `
+    <h2>${icon("i-check")}Trip at a glance</h2>
+    <div class="stats" style="margin-top:8px">
+      <div class="stat total"><div class="k">Trip total</div><div class="v money">${fmtUSD(s.total)}</div></div>
+      <div class="stat paid"><div class="k">Paid</div><div class="v money">${fmtUSD(paid)}</div></div>
+      <div class="stat rem"><div class="k">Remaining</div><div class="v money">${fmtUSD(Math.max(0,s.total-paid))}</div></div>
+    </div>
+    <div class="list" style="margin-top:12px">
+      <div class="item"><div class="flight-ico">✈️</div><div class="main"><div class="t">${af ? esc(flightCode(af)) : "No arrival flight yet"}</div><div class="m">${af ? `Arrive ${esc(af.to)} · ${esc(fmtDate(af.date))} ${esc(fmtTime(af.arr))}` : `<a href="#" data-goto="flights" style="color:var(--ice)">Add your flights →</a>`}</div></div></div>
+      <div class="item"><div class="flight-ico">🏨</div><div class="main"><div class="t">${h.has ? esc(h.name) : "No hotel picked yet"}</div><div class="m">${h.has ? `${h.nights} night${h.nights===1?"":"s"} · ${h.share} per room · your share ${fmtUSD(h.perPerson)}` : `<a href="#" data-goto="hotel" style="color:var(--ice)">Choose a hotel →</a>`}</div></div></div>
+      <div class="item"><div class="flight-ico">💸</div><div class="main"><div class="t">${next ? `Next payment: ${fmtUSD(r2(next.amount - next.applied))}` : (s.total>0 ? "All paid up! 🎉" : "Set up your payment plan")}</div><div class="m">${next ? `Due ${esc(fmtDateY(next.date))}${next.status==="overdue"?' <span class="pill bad">overdue</span>':""} · <a href="#" data-goto="pay" style="color:var(--ice)">Pay tab →</a>` : `<a href="#" data-goto="pay" style="color:var(--ice)">Go to Pay →</a>`}</div></div></div>
+    </div>`;
+}
+
+function renderFlights(){
+  const t = T();
+  const fl = [...t.flights].sort((a,b)=>byWhen(a,"dep").localeCompare(byWhen(b,"dep")));
+  $("#flightList").innerHTML = fl.length ? fl.map(f => `
+    <div class="item">
+      <div class="flight-ico">${f.dir==="arrival"?"🛬":"🛫"}</div>
+      <div class="main">
+        <div class="row" style="gap:6px"><span class="pill ${f.dir==="arrival"?"pink":""}">${f.dir==="arrival"?"Arrival":"Departure"}</span><span class="t">${esc(flightCode(f))}</span></div>
+        <div class="route" style="margin-top:4px">${esc(f.from||"???")}<span class="arrow">→</span>${esc(f.to||"???")}</div>
+        <div class="m">${esc(fmtDate(f.date,{weekday:"short",month:"short",day:"numeric",year:"numeric"}))}${f.dep?` · dep ${esc(fmtTime(f.dep))}`:""}${f.arr?` · arr ${esc(fmtTime(f.arr))}`:""}</div>
+        <div class="m">${f.cost!==""&&f.cost!=null?`Cost ${fmtUSD(num(f.cost))}`:"No cost entered"}${f.conf?` · Conf <b>${esc(f.conf)}</b>`:""}</div>
+      </div>
+      <div class="actions"><button class="btn sm ghost" data-edit-flight="${esc(f.id)}" aria-label="Edit flight">${icon("i-edit")}</button><button class="btn sm danger" data-del-flight="${esc(f.id)}" aria-label="Delete flight">${icon("i-trash")}</button></div>
+    </div>`).join("") : `<div class="empty">No flights yet. Add your arrival and departure below.</div>`;
+  renderFlightSearch();
+}
+function renderFlightSearch(){
+  const t = T(); const { links, s } = flightSearchLinks(t);
+  setVal("#fs-origin", s.origin); setVal("#fs-out", s.out); setVal("#fs-ret", s.ret); setVal("#fs-pax", s.pax);
+  const sel = $("#fs-airline"); if(!sel.options.length) sel.innerHTML = `<option value="">— none —</option>` + AIRLINES.filter(a=>a!=="Other").map(a=>`<option>${esc(a)}</option>`).join("");
+  if(document.activeElement !== sel) sel.value = s.airline || "";
+  $$("#fs-dest-seg button").forEach(b=>b.classList.toggle("on", b.dataset.dest===s.dest));
+  $("#flightSearchLinks").innerHTML = links.length ? links.map(l=>linkBtn(l)).join("") : `<div class="empty" style="grid-column:1/-1">Enter your 3-letter home airport code to build the search links.</div>`;
+  $("#flightSearchHint").textContent = s.ret < s.out ? "⚠ Return date is before the outbound date." :
+    (s.airline==="Southwest Airlines" ? "Tip: if Southwest says the date is too far out, its schedule isn't open yet — check back later." : "");
+}
+let flightDir = "arrival";
+function setFlightDir(d){
+  flightDir = d; $$("#f-dir-seg button").forEach(b=>b.classList.toggle("on", b.dataset.dir===d));
+  const grid = $("#f-grid"), fromWrap = $("#f-from-wrap"), toWrap = $("#f-to-wrap");
+  if(d === "arrival"){ $("#f-from-lbl").textContent = "From (origin airport)"; $("#f-to-lbl").textContent = "To (Dallas airport)"; grid.insertBefore(fromWrap, toWrap); }
+  else { $("#f-from-lbl").textContent = "To (destination airport)"; $("#f-to-lbl").textContent = "From (Dallas airport)"; grid.insertBefore(toWrap, fromWrap); }
+  if(!$("#f-id").value && !$("#f-from").value) $("#f-from").value = (T().homeAirport||"").toUpperCase();
+}
+function resetFlightForm(){
+  $("#flightForm").reset(); $("#f-id").value = ""; $("#f-other-wrap").style.display="none";
+  $("#flightFormTitle").textContent = "Add a flight"; $("#f-submit").innerHTML = `${icon("i-plus")}Add flight`; $("#f-cancel").style.display="none";
+  const hasArr = T().flights.some(f=>f.dir==="arrival");
+  setFlightDir(hasArr ? "departure" : "arrival");
+  $("#f-date").value = hasArr ? (cfg.festEnd ? addDays(cfg.festEnd,1) : "") : (cfg.festStart ? addDays(cfg.festStart,-1) : "");
+}
+
+function renderHotel(){
+  const t = T();
+  $("#hotelOptions").innerHTML = cfg.hotels.length ? cfg.hotels.map(h => `
+    <label class="hotel-opt ${t.hotel.optionId===h.id?"sel":""}">
+      <div class="row"><input type="radio" name="hotelPick" value="${esc(h.id)}" ${t.hotel.optionId===h.id?"checked":""}><span class="hn">${esc(h.name)}</span></div>
+      <div class="m" style="margin-top:4px">${esc(h.area||"")}${h.notes?` · ${esc(h.notes)}`:""}</div>
+      <div class="m" style="margin-top:4px"><b class="money" style="color:var(--text)">${fmtUSD(num(h.nightly))}</b> / night per room${exPill("Example – replace")}${h.link?` · <a href="${esc(h.link)}" target="_blank" rel="noopener" style="color:var(--ice)">Link ↗</a>`:""}</div>
+      <div class="shares">${[1,2,3,4].map(n=>`<div class="share">${n===1?"Solo":n+" / room"}<b class="money">${fmtUSD(num(h.nightly)/n)}</b>pp / night</div>`).join("")}</div>
+      ${t.hotel.optionId===h.id && num(t.hotel.foundNightly)>0 ? `<div class="m" style="margin-top:8px"><span class="pill ok">Price I found: ${fmtUSD(num(t.hotel.foundNightly))}/night</span></div>` : ""}
+      <div class="row" style="margin-top:10px;gap:6px"><span class="m">Check live price${isExampleName(h.name)?" (placeholder name → searches all of "+esc(cfg.city)+")":""}:</span>${hotelOptionLinks(t,h).map(l=>linkBtn(l,"mini")).join("")}</div>
+    </label>`).join("") : `<div class="empty">The organizer hasn't added hotel options yet.</div>`;
+  $$("#h-share-seg button").forEach(b=>b.classList.toggle("on", +b.dataset.share === +t.hotel.share));
+  setVal("#h-in", t.hotel.checkIn); setVal("#h-out", t.hotel.checkOut); setVal("#h-mates", t.hotel.roommates);
+  setVal("#h-found", t.hotel.foundNightly); setVal("#h-found-src", t.hotel.foundSource);
+  $("#h-found").placeholder = hotelOpt(t) ? `Organizer rate ${fmtUSD(num(hotelOpt(t).nightly))}` : "Pick a hotel first";
+  const hp = hotelSearchParams(t);
+  $("#hotelSearchSum").innerHTML = `<span class="pill">${esc(hp.where)}</span><span class="pill">${esc(fmtDate(hp.ci))} → ${esc(fmtDate(hp.co))}${cfg.datesTBD && !t.hotel.checkIn ? " (festival TBD)" : ""}</span><span class="pill">${hp.guests} guest${hp.guests>1?"s":""} / room</span>`;
+  $("#hotelSearchLinks").innerHTML = hotelSearchLinks(t).map(l=>linkBtn(l)).join("");
+  const c = hotelCalc(t);
+  const warn = (t.hotel.checkIn && t.hotel.checkOut && c.nights <= 0) ? `<div class="note">Check-out must be after check-in.</div>` : "";
+  $("#hotelCalc").innerHTML = warn + (c.has ? `
+    <table class="breakdown">
+      <tr><td>${esc(c.name)} ${c.usingFound ? `<span class="pill ok">price I found${t.hotel.foundSource?" · "+esc(t.hotel.foundSource):""}</span><div class="m">Organizer rate: ${fmtUSD(c.baseNightly)}</div>` : exPill()}</td><td class="num">${fmtUSD(c.nightly)} / night</td></tr>
+      <tr><td>Nights (${esc(fmtDate(t.hotel.checkIn))} → ${esc(fmtDate(t.hotel.checkOut))})</td><td class="num">× ${c.nights}</td></tr>
+      ${num(cfg.hotelTaxPct)?`<tr><td>Tax / fees</td><td class="num">+ ${num(cfg.hotelTaxPct)}%</td></tr>`:""}
+      <tr><td>Room total</td><td class="num">${fmtUSD(c.room)}</td></tr>
+      <tr><td>Split ${c.share} way${c.share>1?"s":""}</td><td class="num">÷ ${c.share}</td></tr>
+      <tfoot><tr><td>Your hotel share${c.usingFound?"":exPill()}</td><td class="num" id="hotelShareCell">${fmtUSD(c.perPerson)}</td></tr></tfoot>
+    </table>` : `<div class="empty">Pick a hotel option above to see your share.</div>`);
+}
+
+function renderItin(){
+  const t = T(); const ev = timelineEvents(t); const days = tripDays(t);
+  $("#timeline").innerHTML = days.length ? days.map(d => {
+    const items = ev.filter(e=>e.date===d);
+    return `<div class="day"><div class="day-h"><span class="d">${esc(fmtDate(d))}</span>${isFestDay(d)?`<span class="pill pink">Festival day${cfg.datesTBD?" · TBD":""}</span>`:""}</div>
+      <div class="tl">${items.length ? items.map(e => `
+        <div class="ev ${e.auto?"auto":""} ${e.cat==="festival"?"fest":""}">
+          <div class="time">${e.time?esc(fmtTime(e.time)):"—"}</div>
+          <div class="body"><div class="t">${CAT_ICON[e.cat]||"📌"} ${esc(e.title)} ${e.auto?'<span class="pill">auto</span>':""}</div>
+            ${e.loc?`<div class="m">${esc(e.loc)}</div>`:""}${e.cost?`<div class="m money">${fmtUSD(e.cost)} pp</div>`:""}</div>
+          ${e.auto?"":`<div class="actions"><button class="btn sm ghost" data-edit-itin="${esc(e.id)}" aria-label="Edit item">${icon("i-edit")}</button><button class="btn sm danger" data-del-itin="${esc(e.id)}" aria-label="Delete item">${icon("i-trash")}</button></div>`}
+        </div>`).join("") : `<div class="m" style="margin:0 0 8px">Nothing planned yet.</div>`}</div></div>`;
+  }).join("") : `<div class="empty">Add flights, a hotel, or items to build your timeline.</div>`;
+}
+function resetItinForm(){
+  $("#itinForm").reset(); $("#i-id").value=""; $("#itinFormTitle").textContent="Add to itinerary";
+  $("#i-submit").innerHTML = `${icon("i-plus")}Add item`; $("#i-cancel").style.display="none";
+  $("#i-date").value = cfg.festStart || "";
+}
+
+function renderPay(){
+  const t = T(); const lines = costLines(t); const s = buildSchedule(t); const paid = paidTotal(t); const total = s.total; const today = todayISO();
+  $("#costBreakdown").innerHTML = `<table class="breakdown">${lines.map(l=>`<tr><td>${esc(l.label)}${l.example?exPill():""}${l.off?`<div class="m">${esc(l.off)}</div>`:""}${l.key==="pkg"?`<label class="check" style="padding:2px 0;font-size:13px"><input type="checkbox" id="c-pkg" ${t.includePackage?"checked":""}>Include package</label>`:""}</td><td class="num">${fmtUSD(l.amount)}</td></tr>`).join("")}
+    <tfoot><tr><td>Trip total</td><td class="num" id="tripTotalCell">${fmtUSD(total)}</td></tr></tfoot></table>`;
+  $("#c-flights").checked = !!t.includeFlights; $("#c-itin").checked = !!t.includeItin;
+  $("#addonList").innerHTML = t.addons.length ? t.addons.map(a=>`<div class="item" style="padding:8px 12px;align-items:center"><div class="main"><span class="t">${esc(a.label)}</span></div><span class="money">${fmtUSD(num(a.cost))}</span><button class="btn sm danger" data-del-addon="${esc(a.id)}" aria-label="Delete add-on">${icon("i-trash")}</button></div>`).join("") : `<div class="m">No add-ons yet.</div>`;
+  const rem = Math.max(0, r2(total - paid)); const pct = total > 0 ? Math.min(100, paid/total*100) : 0;
+  $("#payStats").innerHTML = `<div class="stat total"><div class="k">Total</div><div class="v money">${fmtUSD(total)}</div></div><div class="stat paid"><div class="k">Paid</div><div class="v money" id="paidCell">${fmtUSD(paid)}</div></div><div class="stat rem"><div class="k">Remaining</div><div class="v money" id="remCell">${fmtUSD(rem)}</div></div>`;
+  $("#payBar").style.width = pct.toFixed(1) + "%";
+  $("#payProgressText").innerHTML = `${pct.toFixed(0)}% paid${paid>total+0.004?` · <span class="pill ok">Overpaid by ${fmtUSD(paid-total)}</span>`:""}`;
+  $$("#plan-seg button").forEach(b=>b.classList.toggle("on", b.dataset.plan===t.plan.type));
+  $("#plan-start-lbl").textContent = t.plan.type==="full" ? (t.plan.useDeposit ? "Pay balance on" : "Pay in full on") : "First installment date";
+  setVal("#pl-start", t.plan.startDate || defaultStart(t));
+  $("#pl-due").value = cfg.finalDueDate;
+  $("#pl-dep").checked = !!t.plan.useDeposit; $("#pl-dep-fields").style.display = t.plan.useDeposit ? "" : "none";
+  setVal("#pl-dep-amt", t.plan.deposit==null ? num(cfg.depositDefault) : t.plan.deposit);
+  setVal("#pl-dep-date", t.plan.depositDate || today);
+  const stTag = r => ({paid:'<span class="pill ok">Paid</span>',partial:`<span class="pill warn">${fmtUSD(r.applied)} paid</span>`,overdue:'<span class="pill bad">Overdue</span>',upcoming:'<span class="pill">Upcoming</span>'}[r.status]);
+  $("#schedTable").innerHTML = s.rows.length ? `<thead><tr><th>Payment</th><th>Date</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody>${s.rows.map(r=>`<tr><td>${esc(r.label)}</td><td>${esc(fmtDateY(r.date))}${r.late?' <span class="pill bad">after due date</span>':""}</td><td class="num">${fmtUSD(r.amount)}</td><td>${stTag(r)}</td></tr>`).join("")}</tbody><tfoot><tr><td colspan="2">Total · ${s.rows.length} payment${s.rows.length===1?"":"s"}</td><td class="num" id="schedTotalCell">${fmtUSD(s.rows.reduce((a,r)=>a+r.amount,0))}</td><td></td></tr></tfoot>` : `<tbody><tr><td class="m">Your total is $0 — pick a hotel or add costs to build a schedule.</td></tr></tbody>`;
+  if(!$("#py-method").options.length) $("#py-method").innerHTML = PAY_METHODS.map(m=>`<option>${esc(m)}</option>`).join("");
+  if(!$("#py-date").value) $("#py-date").value = today;
+  const ps = [...t.payments].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  $("#payList").innerHTML = ps.length ? ps.map(p=>`<div class="item" style="align-items:center"><div class="flight-ico">✓</div><div class="main"><div class="t money">${fmtUSD(num(p.amount))} <span class="pill">${esc(p.method)}</span></div><div class="m">${esc(fmtDateY(p.date))}${p.note?` · ${esc(p.note)}`:""}</div></div><button class="btn sm danger" data-del-pay="${esc(p.id)}" aria-label="Delete payment">${icon("i-trash")}</button></div>`).join("") : `<div class="empty">No payments logged yet.</div>`;
+  $("#payNote").textContent = cfg.paymentNote + (cfg.organizerName ? ` Organizer: ${cfg.organizerName}.` : "");
+  $("#payHandles").innerHTML = cfg.paymentHandles.map(h=>`<div class="handle"><div><div class="hm">${esc(h.method)}</div><div class="hv">${esc(h.handle)}</div></div><button class="btn sm ghost" data-copy="${esc(h.handle)}">Copy</button></div>`).join("") || `<div class="m">No payment handles set yet.</div>`;
+}
+
+function rosterRows(){
+  return travelers.map(t => {
+    const af = arrivalFlight(t), df = departureFlight(t), h = hotelCalc(t), total = tripTotal(t), paid = paidTotal(t);
+    return { t, name: t.name || "Unnamed", from: [t.homeCity, t.homeAirport && `(${t.homeAirport.toUpperCase()})`].filter(Boolean).join(" "),
+      airline: af ? airlineName(af) : "", flight: af ? flightCode(af) : "",
+      arrival: af ? `${fmtDate(af.date,{month:"short",day:"numeric"})} ${fmtTime(af.arr||af.dep)} ${af.to}`.replace(/\s+/g," ").trim() : "",
+      depart: df ? `${fmtDate(df.date,{month:"short",day:"numeric"})} ${fmtTime(df.dep)} ${df.from}`.replace(/\s+/g," ").trim() : "",
+      hotel: h.has ? `${h.name} (${h.share}/room)${h.usingFound?` · found ${fmtUSD(h.nightly)}/nt`:""}` : "", nights: h.nights,
+      rate: h.has ? h.nightly : 0, rateSrc: h.has ? (h.usingFound ? `Traveler found${t.hotel.foundSource?` (${t.hotel.foundSource})`:""}` : (cfg.pricesAreExamples ? "Organizer placeholder" : "Organizer rate")) : "", total, paid, remaining: Math.max(0, r2(total - paid)) };
+  });
+}
+function renderGroup(){
+  const rows = rosterRows(); const sum = k => r2(rows.reduce((a,r)=>a+r[k],0));
+  $("#rosterTable").innerHTML = `<thead><tr><th>Name</th><th>From</th><th>Airline</th><th>Arrival</th><th>Hotel</th><th class="num">Total</th><th class="num">Paid</th><th class="num">Remaining</th></tr></thead>
+   <tbody>${rows.map(r=>`<tr ${r.t.id===activeId?'style="background:rgba(255,47,179,.08)"':""}><td><b>${esc(r.name)}</b></td><td>${esc(r.from)||"—"}</td><td>${esc(r.airline)||"—"}</td><td>${esc(r.arrival)||"—"}</td><td>${esc(r.hotel)||"—"}</td><td class="num">${fmtUSD(r.total)}</td><td class="num" style="color:var(--ok)">${fmtUSD(r.paid)}</td><td class="num" style="color:var(--pink2)">${fmtUSD(r.remaining)}</td></tr>`).join("")}</tbody>
+   <tfoot><tr><td colspan="5">${rows.length} traveler${rows.length===1?"":"s"} on this device</td><td class="num">${fmtUSD(sum("total"))}</td><td class="num">${fmtUSD(sum("paid"))}</td><td class="num">${fmtUSD(sum("remaining"))}</td></tr></tfoot>`;
+}
+function renderAll(){ renderHeader(); renderMe(); renderFlights(); renderHotel(); renderItin(); renderPay(); renderGroup(); }
+
+/* ---------------- share view ---------------- */
+function shareText(t){
+  const s = buildSchedule(t), paid = paidTotal(t), h = hotelCalc(t);
+  const L = [];
+  L.push(`${cfg.eventName} — ${cfg.city}${cfg.datesTBD?" (June 2027, exact dates TBD)":""}`);
+  L.push(`Traveler: ${t.name||"Unnamed"}${t.homeCity?` from ${t.homeCity}`:""}${t.homeAirport?` (${t.homeAirport.toUpperCase()})`:""}`);
+  if(t.phone || t.email) L.push(`Contact: ${[t.phone,t.email].filter(Boolean).join(" · ")}`);
+  L.push("", "FLIGHTS");
+  if(!t.flights.length) L.push("  (none yet)");
+  [...t.flights].sort((a,b)=>byWhen(a,"dep").localeCompare(byWhen(b,"dep"))).forEach(f => L.push(`  ${f.dir==="arrival"?"Arrive":"Depart"}: ${flightCode(f)} ${f.from}→${f.to} ${fmtDate(f.date)} dep ${fmtTime(f.dep)||"?"} arr ${fmtTime(f.arr)||"?"}${f.conf?` · Conf ${f.conf}`:""}`));
+  L.push("", "HOTEL", h.has ? `  ${h.name} · ${fmtDate(t.hotel.checkIn)} → ${fmtDate(t.hotel.checkOut)} (${h.nights} nights) · ${h.share}/room · my share ${fmtUSD(h.perPerson)}${t.hotel.roommates?` · with ${t.hotel.roommates}`:""}` : "  (not picked yet)");
+  L.push("", "ITINERARY");
+  const ev = timelineEvents(t); let last = "";
+  ev.forEach(e => { if(e.date!==last){ L.push(`  ${fmtDate(e.date)}${isFestDay(e.date)?" · Festival day":""}`); last=e.date; } L.push(`    ${e.time?fmtTime(e.time):"--"}  ${e.title}${e.loc?` @ ${e.loc}`:""}`); });
+  if(!ev.length) L.push("  (nothing yet)");
+  L.push("", `COST: total ${fmtUSD(s.total)} · paid ${fmtUSD(paid)} · remaining ${fmtUSD(Math.max(0,s.total-paid))}${cfg.pricesAreExamples?" (placeholder prices)":""}`);
+  L.push(`Plan: ${PLAN_NAMES[t.plan.type]} · final due ${fmtDateY(cfg.finalDueDate)}`);
+  s.rows.forEach(r => L.push(`  ${fmtDateY(r.date)}  ${fmtUSD(r.amount)}  ${r.label} [${r.status}]`));
+  return L.join("\n");
+}
+function renderShare(){
+  const t = T(); const s = buildSchedule(t), paid = paidTotal(t), h = hotelCalc(t); const ev = timelineEvents(t);
+  const days = Array.from(new Set(ev.map(e=>e.date)));
+  $("#shareContent").innerHTML = `
+    <div class="card"><h1 class="title" style="font-size:36px">${esc(cfg.eventName)}</h1>
+      <p class="sub">${esc(cfg.host)} · ${esc(cfg.city)} · ${cfg.datesTBD?"June 2027 (exact dates TBD)":`${esc(fmtDate(cfg.festStart,{month:"short",day:"numeric"}))}–${esc(fmtDateY(cfg.festEnd))}`}</p>
+      <h2 style="margin-top:12px">${esc(t.name||"Unnamed traveler")}</h2>
+      <div class="m">${esc([t.homeCity, t.homeAirport&&t.homeAirport.toUpperCase()].filter(Boolean).join(" · "))}${t.phone||t.email?` · ${esc([t.phone,t.email].filter(Boolean).join(" · "))}`:""}</div></div>
+    <div class="card"><h3 style="margin-top:0">✈️ Flights</h3>${t.flights.length ? `<div class="table-wrap"><table><thead><tr><th>Type</th><th>Flight</th><th>Route</th><th>When</th><th>Conf</th></tr></thead><tbody>${[...t.flights].sort((a,b)=>byWhen(a,"dep").localeCompare(byWhen(b,"dep"))).map(f=>`<tr><td>${f.dir==="arrival"?"Arrive":"Depart"}</td><td>${esc(flightCode(f))}</td><td>${esc(f.from)}→${esc(f.to)}</td><td>${esc(fmtDate(f.date))} ${esc(fmtTime(f.dep))}${f.arr?"–"+esc(fmtTime(f.arr)):""}</td><td>${esc(f.conf||"")}</td></tr>`).join("")}</tbody></table></div>` : `<div class="m">No flights yet.</div>`}</div>
+    <div class="card"><h3 style="margin-top:0">🏨 Hotel</h3>${h.has ? `<div><b>${esc(h.name)}</b></div><div class="m">${esc(fmtDate(t.hotel.checkIn))} → ${esc(fmtDate(t.hotel.checkOut))} · ${h.nights} nights · ${h.share} per room${t.hotel.roommates?` · with ${esc(t.hotel.roommates)}`:""} · my share ${fmtUSD(h.perPerson)}</div>` : `<div class="m">Not picked yet.</div>`}</div>
+    <div class="card"><h3 style="margin-top:0">🗓️ Itinerary</h3>${days.length ? days.map(d=>`<div class="day"><div class="day-h"><span class="d">${esc(fmtDate(d))}</span>${isFestDay(d)?`<span class="pill pink">Festival day${cfg.datesTBD?" · TBD":""}</span>`:""}</div><div class="tl">${ev.filter(e=>e.date===d).map(e=>`<div class="ev ${e.auto?"auto":""}"><div class="time">${e.time?esc(fmtTime(e.time)):"—"}</div><div class="body"><div class="t">${CAT_ICON[e.cat]||""} ${esc(e.title)}</div>${e.loc?`<div class="m">${esc(e.loc)}</div>`:""}</div></div>`).join("")}</div></div>`).join("") : `<div class="m">Nothing yet.</div>`}</div>
+    <div class="card"><h3 style="margin-top:0">💸 Cost &amp; payments ${cfg.pricesAreExamples?'<span class="pill warn">placeholder prices</span>':""}</h3>
+      <div class="stats"><div class="stat total"><div class="k">Total</div><div class="v">${fmtUSD(s.total)}</div></div><div class="stat paid"><div class="k">Paid</div><div class="v">${fmtUSD(paid)}</div></div><div class="stat rem"><div class="k">Remaining</div><div class="v">${fmtUSD(Math.max(0,s.total-paid))}</div></div></div>
+      <div class="m" style="margin-top:8px">Plan: ${esc(PLAN_NAMES[t.plan.type])} · final due ${esc(fmtDateY(cfg.finalDueDate))}</div>
+      ${s.rows.length?`<div class="table-wrap" style="margin-top:10px"><table><thead><tr><th>Date</th><th>Payment</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody>${s.rows.map(r=>`<tr><td>${esc(fmtDateY(r.date))}</td><td>${esc(r.label)}</td><td class="num">${fmtUSD(r.amount)}</td><td>${esc(r.status)}</td></tr>`).join("")}</tbody></table></div>`:""}
+    </div>`;
+  $("#sh-native").style.display = navigator.share ? "" : "none";
+}
+
+/* ---------------- save status & banner ---------------- */
+const SAVE_MSG = {
+  unavailable: "This viewer isn't letting the page save. Your changes work for now but will be lost when you close it. Open in Safari/Chrome to save, or tap Export to keep a copy.",
+  blocked: "This viewer isn't letting the page save. Your changes work for now but will be lost when you close it. Open in Safari/Chrome to save, or tap Export to keep a copy.",
+  quota: "This browser's storage for this page is full, so your latest changes aren't being saved. They still work for now — tap Export to keep a copy, then remove travelers you no longer need (traveler menu) or clear this site's data."
+};
+const bannerSeen = {};
+function showSaveBanner(reason){
+  const key = reason === "quota" ? "quota" : "unavailable";
+  if(bannerSeen[key]) return; bannerSeen[key] = true;
+  $("#saveBannerMsg").textContent = SAVE_MSG[reason] || SAVE_MSG.unavailable;
+  $("#saveBanner").hidden = false; renderSaveStatus();
+}
+function renderSaveStatus(){
+  const el = $("#saveStatus"); if(!el) return;
+  const kb = (Store.bytes()/1024).toFixed(1) + " KB";
+  const k = Store.kind, r = Store.reason;
+  el.innerHTML = r === "quota" ? `<span class="pill bad">Not saving — storage full</span>` :
+    (Store.persistent() ? `<span class="pill ok">Saved on this device</span> <span class="m">${esc(k)} · ${kb}</span>` :
+    (k === "sessionStorage" && !r ? `<span class="pill warn">Saving for this tab only</span>` : `<span class="pill warn">Not saving in this viewer</span>`) + ` <span class="m">export to keep a copy</span>`);
+}
+Store.onFail(reason => showSaveBanner(reason));
+function backupJSON(){ return JSON.stringify({ type:"fft-backup", version:1, exportedAt:new Date().toISOString(), config: cfg, travelers }, null, 2); }
+function exportBackup(){ if(download(`fem-fantasy-fest-backup-${todayISO()}.json`, backupJSON())) toast("Backup exported"); }
+
+/* ---------------- settings panel ---------------- */
+let draftCfg = null;
+const S_FIELDS = ["eventName","host","city","nearArea","organizerName","festStart","festEnd","packageLabel","packagePrice","finalDueDate","depositDefault","hotelTaxPct","checkInTime","checkOutTime","paymentNote"];
+function openOverlay(id){ const o = $("#"+id); o.classList.add("on"); o.scrollTop = 0; document.body.style.overflow="hidden"; }
+function closeOverlay(id){ $("#"+id).classList.remove("on"); document.body.style.overflow=""; }
+function openSettings(){
+  draftCfg = JSON.parse(JSON.stringify(cfg));
+  S_FIELDS.forEach(k => $("#s-"+k).value = draftCfg[k] ?? "");
+  $("#s-datesTBD").checked = !!draftCfg.datesTBD; $("#s-pricesAreExamples").checked = !!draftCfg.pricesAreExamples;
+  renderSettingsLists(); openOverlay("settingsOverlay");
+}
+function renderSettingsLists(keepOpen){
+  const open = keepOpen ? $$("#s-hotels details").map(d=>d.open) : [];
+  $("#s-handles").innerHTML = draftCfg.paymentHandles.map((h,i)=>`<div class="hrow"><input data-hi="${i}" data-hk="method" value="${esc(h.method)}" placeholder="Method (e.g. Zelle)"><input data-hi="${i}" data-hk="handle" value="${esc(h.handle)}" placeholder="Handle / link"><button class="btn sm danger" data-del-handle="${i}" aria-label="Remove handle">${icon("i-trash")}</button></div>`).join("") || `<div class="m">No handles.</div>`;
+  $("#s-hotels").innerHTML = draftCfg.hotels.map((h,i)=>`<details class="org" ${open[i] || (!h.name) ? "open" : ""}><summary>${esc(h.name||"New hotel")} — ${fmtUSD(num(h.nightly))}/night</summary>
+    <div class="grid g2" style="margin-top:10px">
+      <label class="f">Name<input data-ho="${i}" data-hk="name" value="${esc(h.name)}"></label>
+      <label class="f">Area<input data-ho="${i}" data-hk="area" value="${esc(h.area)}"></label>
+      <label class="f">Nightly room rate (USD)<input data-ho="${i}" data-hk="nightly" type="number" min="0" step="0.01" value="${esc(h.nightly)}"></label>
+      <label class="f">Link<input data-ho="${i}" data-hk="link" type="url" value="${esc(h.link)}" placeholder="https://"></label>
+      <label class="f">Notes<input data-ho="${i}" data-hk="notes" value="${esc(h.notes)}"></label>
+      <div class="f"><span style="font-size:12px;color:var(--muted);font-weight:600">Per person / night</span><div class="m">${[2,3,4].map(n=>`${n}/room: <b>${fmtUSD(num(h.nightly)/n)}</b>`).join(" · ")}</div></div>
+    </div><div class="row end" style="margin-top:8px"><button class="btn sm danger" data-del-hotel="${i}">Remove hotel</button></div></details>`).join("") || `<div class="m">No hotel options.</div>`;
+}
+function collectSettings(){
+  S_FIELDS.forEach(k => { const el = $("#s-"+k); draftCfg[k] = el.type === "number" ? num(el.value) : el.value; });
+  draftCfg.datesTBD = $("#s-datesTBD").checked; draftCfg.pricesAreExamples = $("#s-pricesAreExamples").checked;
+}
+
+/* ---------------- navigation & global events ---------------- */
+const TABS = ["me","flights","hotel","itin","pay","group"];
+function showTab(tab){ $$("#tabs button").forEach(b=>b.classList.toggle("on", b.dataset.tab===tab)); $$(".tab").forEach(s=>s.classList.toggle("on", s.id==="tab-"+tab));
+  if(tab==="flights" && !$("#f-id").value && !$("#f-from").value) $("#f-from").value = (T().homeAirport||"").toUpperCase(); }
+function goto(tab){
+  showTab(tab);
+  const nav = $("#tabs"); const y = window.innerWidth >= 900 ? nav.offsetTop - 10 : $(".hero").offsetTop + $(".hero").offsetHeight - 10;
+  if(window.scrollY > y) window.scrollTo({top: y, behavior:"smooth"});
+  try{ history.replaceState(null,"","#"+tab); }catch(e){}
+}
+$("#tabs").addEventListener("click", e => { const b = e.target.closest("button[data-tab]"); if(b) goto(b.dataset.tab); });
+document.addEventListener("click", e => {
+  const g = e.target.closest("[data-goto]"); if(g){ e.preventDefault(); goto(g.dataset.goto); return; }
+  const c = e.target.closest("[data-copy]"); if(c){ const v = c.dataset.copy; (navigator.clipboard ? navigator.clipboard.writeText(v) : Promise.reject()).then(()=>toast("Copied: "+v),()=>toast(v)); return; }
+  const cl = e.target.closest("[data-close]"); if(cl){ closeOverlay(cl.dataset.close); return; }
+});
+$("#flyer").addEventListener("click", ()=> { $("#lightbox img").src = $("#flyerImg").src; $("#lightbox").classList.add("on"); });
+$("#lightbox").addEventListener("click", ()=> $("#lightbox").classList.remove("on"));
+document.addEventListener("keydown", e => { if(e.key==="Escape"){ $$(".overlay.on,.lightbox.on").forEach(o=>o.classList.remove("on")); document.body.style.overflow=""; } });
+
+// traveler switching
+$("#travelerSelect").addEventListener("change", e => {
+  const v = e.target.value;
+  if(v === "__del"){
+    const t = T();
+    if(confirm(`Remove "${t.name||"Unnamed traveler"}" and all their data from this device? (Export first if you need a copy.)`)){
+      travelers = travelers.filter(x=>x.id!==t.id); if(!travelers.length) travelers=[newTraveler()]; activeId = travelers[0].id; toast("Traveler removed");
+    }
+  } else activeId = v;
+  persist(); resetFlightForm(); resetItinForm(); renderAll();
+});
+$("#btnNewTraveler").addEventListener("click", () => { const t = newTraveler(); travelers.push(t); activeId = t.id; persist(); resetFlightForm(); resetItinForm(); renderAll(); goto("me"); $("#p-name").focus(); toast("New traveler added — enter their name"); });
+
+// profile
+$$("[data-p]").forEach(el => el.addEventListener("input", () => {
+  const t = T(); let v = el.value; if(el.dataset.p==="homeAirport") v = v.toUpperCase().trim(); t[el.dataset.p] = v; persist();
+  renderHeader(); renderMe(); renderGroup();
+}));
+
+// flights
+$("#f-airline").innerHTML = `<option value="">Select airline…</option>` + AIRLINES.map(a=>`<option>${esc(a)}</option>`).join("");
+$("#f-airline").addEventListener("change", e => $("#f-other-wrap").style.display = e.target.value==="Other" ? "" : "none");
+$("#f-dir-seg").addEventListener("click", e => { const b = e.target.closest("button[data-dir]"); if(b) setFlightDir(b.dataset.dir); });
+$("#flightForm").addEventListener("submit", e => {
+  e.preventDefault(); const t = T();
+  const airline = $("#f-airline").value; if(!airline){ toast("Pick an airline"); $("#f-airline").focus(); return; }
+  if(!$("#f-date").value){ toast("Add the flight date"); return; }
+  const other = $("#f-from").value.trim().toUpperCase(), dallas = $("#f-dallas").value;
+  const f = { id: $("#f-id").value || uid(), dir: flightDir, airline, airlineOther: $("#f-airline-other").value.trim(), num: $("#f-num").value.trim().toUpperCase(),
+    from: flightDir==="arrival" ? other : dallas, to: flightDir==="arrival" ? dallas : other,
+    date: $("#f-date").value, dep: $("#f-dep").value, arr: $("#f-arr").value, cost: $("#f-cost").value === "" ? "" : r2(num($("#f-cost").value)), conf: $("#f-conf").value.trim().toUpperCase() };
+  const i = t.flights.findIndex(x=>x.id===f.id); if(i>=0) t.flights[i]=f; else t.flights.push(f);
+  persist(); toast(i>=0?"Flight updated":"Flight added ✈️"); resetFlightForm(); renderAll();
+});
+$("#f-cancel").addEventListener("click", resetFlightForm);
+$("#flightList").addEventListener("click", e => {
+  const t = T(); const ed = e.target.closest("[data-edit-flight]"), dl = e.target.closest("[data-del-flight]");
+  if(dl){ if(confirm("Delete this flight?")){ t.flights = t.flights.filter(f=>f.id!==dl.dataset.delFlight); persist(); renderAll(); resetFlightForm(); } return; }
+  if(ed){ const f = t.flights.find(x=>x.id===ed.dataset.editFlight); if(!f) return;
+    $("#f-id").value = f.id; setFlightDir(f.dir); $("#f-airline").value = f.airline; $("#f-other-wrap").style.display = f.airline==="Other"?"":"none"; $("#f-airline-other").value = f.airlineOther||"";
+    $("#f-num").value = f.num||""; $("#f-from").value = f.dir==="arrival"?f.from:f.to; $("#f-dallas").value = f.dir==="arrival"?f.to:f.from;
+    $("#f-date").value = f.date||""; $("#f-dep").value=f.dep||""; $("#f-arr").value=f.arr||""; $("#f-cost").value = (f.cost===""||f.cost==null)?"":f.cost; $("#f-conf").value=f.conf||"";
+    $("#flightFormTitle").textContent="Edit flight"; $("#f-submit").textContent="Save flight"; $("#f-cancel").style.display="";
+    $("#flightForm").scrollIntoView({behavior:"smooth",block:"center"}); }
+});
+
+// hotel
+$("#hotelOptions").addEventListener("change", e => {
+  if(e.target.name !== "hotelPick") return; const t = T(); const h = cfg.hotels.find(x=>x.id===e.target.value);
+  if(t.hotel.optionId !== e.target.value){ t.hotel.foundNightly = ""; t.hotel.foundSource = ""; }
+  t.hotel.optionId = e.target.value; t.hotel.snapshotName = h?h.name:""; t.hotel.snapshotNightly = h?num(h.nightly):0;
+  if(!t.hotel.checkIn){ const af = arrivalFlight(t); t.hotel.checkIn = af ? af.date : addDays(cfg.festStart,-1); }
+  if(!t.hotel.checkOut){ const df = departureFlight(t); t.hotel.checkOut = df ? df.date : addDays(cfg.festEnd,1); }
+  persist(); renderAll(); toast("Hotel selected 🏨");
+});
+$("#h-share-seg").addEventListener("click", e => { const b = e.target.closest("button[data-share]"); if(!b) return; T().hotel.share = +b.dataset.share; persist(); renderAll(); });
+["h-in","h-out","h-mates"].forEach(id => $("#"+id).addEventListener("change", () => {
+  const t = T(); t.hotel.checkIn = $("#h-in").value; t.hotel.checkOut = $("#h-out").value; t.hotel.roommates = $("#h-mates").value; persist(); renderAll();
+}));
+
+// live search: hotel found price
+$("#h-found").addEventListener("change", e => { const t = T(); t.hotel.foundNightly = e.target.value === "" ? "" : r2(num(e.target.value)); persist(); renderAll(); if(num(t.hotel.foundNightly)>0) toast(`Using your price: ${fmtUSD(t.hotel.foundNightly)}/night`); });
+$("#h-found-src").addEventListener("change", e => { T().hotel.foundSource = e.target.value.trim(); persist(); renderAll(); });
+$("#h-found-clear").addEventListener("click", () => { const t = T(); t.hotel.foundNightly = ""; t.hotel.foundSource = ""; persist(); renderAll(); toast("Back to the organizer's rate"); });
+// live search: flights
+function setFS(k, v){ const t = T(); t.flightSearch = Object.assign({}, t.flightSearch, { [k]: v }); persist(); renderFlightSearch(); }
+$("#fs-origin").addEventListener("input", e => setFS("origin", e.target.value.toUpperCase().trim()));
+$("#fs-out").addEventListener("change", e => setFS("out", e.target.value));
+$("#fs-ret").addEventListener("change", e => setFS("ret", e.target.value));
+$("#fs-pax").addEventListener("change", e => setFS("pax", Math.min(9, Math.max(1, parseInt(e.target.value)||1))));
+$("#fs-airline").addEventListener("change", e => setFS("airline", e.target.value));
+$("#fs-dest-seg").addEventListener("click", e => { const b = e.target.closest("button[data-dest]"); if(b) setFS("dest", b.dataset.dest); });
+$$(".live-note").forEach(n => n.textContent = LIVE_NOTE);
+
+// itinerary
+$("#itinForm").addEventListener("submit", e => {
+  e.preventDefault(); const t = T();
+  const it = { id: $("#i-id").value || uid(), date: $("#i-date").value, time: $("#i-time").value, cat: $("#i-cat").value, title: $("#i-title").value.trim(), loc: $("#i-loc").value.trim(), cost: $("#i-cost").value===""?"":r2(num($("#i-cost").value)) };
+  if(!it.date || !it.title){ toast("Date and title are required"); return; }
+  const i = t.itinerary.findIndex(x=>x.id===it.id); if(i>=0) t.itinerary[i]=it; else t.itinerary.push(it);
+  persist(); toast(i>=0?"Item updated":"Added to itinerary ✨"); resetItinForm(); renderAll();
+});
+$("#i-cancel").addEventListener("click", resetItinForm);
+$("#timeline").addEventListener("click", e => {
+  const t = T(); const ed = e.target.closest("[data-edit-itin]"), dl = e.target.closest("[data-del-itin]");
+  if(dl){ t.itinerary = t.itinerary.filter(x=>x.id!==dl.dataset.delItin); persist(); renderAll(); toast("Removed"); return; }
+  if(ed){ const it = t.itinerary.find(x=>x.id===ed.dataset.editItin); if(!it) return;
+    $("#i-id").value=it.id; $("#i-date").value=it.date; $("#i-time").value=it.time||""; $("#i-cat").value=it.cat||"other"; $("#i-title").value=it.title; $("#i-loc").value=it.loc||""; $("#i-cost").value=(it.cost===""||it.cost==null)?"":it.cost;
+    $("#itinFormTitle").textContent="Edit item"; $("#i-submit").textContent="Save item"; $("#i-cancel").style.display=""; $("#itinForm").scrollIntoView({behavior:"smooth",block:"center"}); }
+});
+
+// pay
+$("#costBreakdown").addEventListener("change", e => { if(e.target.id==="c-pkg"){ T().includePackage = e.target.checked; persist(); renderAll(); } });
+$("#c-flights").addEventListener("change", e => { T().includeFlights = e.target.checked; persist(); renderAll(); });
+$("#c-itin").addEventListener("change", e => { T().includeItin = e.target.checked; persist(); renderAll(); });
+$("#addonForm").addEventListener("submit", e => { e.preventDefault(); const label = $("#a-label").value.trim(), cost = r2(num($("#a-cost").value)); if(!label){ toast("Name the add-on"); return; } T().addons.push({id:uid(),label,cost}); $("#addonForm").reset(); persist(); renderAll(); toast("Add-on added"); });
+$("#addonList").addEventListener("click", e => { const b = e.target.closest("[data-del-addon]"); if(b){ const t=T(); t.addons = t.addons.filter(a=>a.id!==b.dataset.delAddon); persist(); renderAll(); } });
+$("#plan-seg").addEventListener("click", e => { const b = e.target.closest("button[data-plan]"); if(!b) return; const t = T(); t.plan.type = b.dataset.plan; t.plan.startDate = ""; persist(); renderAll(); });
+$("#pl-start").addEventListener("change", e => { T().plan.startDate = e.target.value; persist(); renderAll(); });
+$("#pl-dep").addEventListener("change", e => { const t = T(); t.plan.useDeposit = e.target.checked; t.plan.startDate = ""; persist(); renderAll(); });
+$("#pl-dep-amt").addEventListener("change", e => { T().plan.deposit = e.target.value===""?null:r2(num(e.target.value)); persist(); renderAll(); });
+$("#pl-dep-date").addEventListener("change", e => { const t = T(); t.plan.depositDate = e.target.value; persist(); renderAll(); });
+$("#payForm").addEventListener("submit", e => {
+  e.preventDefault(); const amount = r2(num($("#py-amt").value)); if(amount <= 0){ toast("Enter an amount"); return; }
+  T().payments.push({ id:uid(), amount, date: $("#py-date").value || todayISO(), method: $("#py-method").value, note: $("#py-note").value.trim() });
+  $("#py-amt").value=""; $("#py-note").value=""; persist(); renderAll(); toast(`Logged ${fmtUSD(amount)} 💖`);
+});
+$("#payList").addEventListener("click", e => { const b = e.target.closest("[data-del-pay]"); if(b && confirm("Delete this payment record?")){ const t=T(); t.payments=t.payments.filter(p=>p.id!==b.dataset.delPay); persist(); renderAll(); } });
+
+// group: export / import
+function travelerExport(t){ return { type:"fft-traveler", version:1, exportedAt:new Date().toISOString(), event: cfg.eventName, summary: { total: tripTotal(t), paid: paidTotal(t), hotel: hotelCalc(t).name }, traveler: t }; }
+$("#btnExportMe").addEventListener("click", () => { const t=T(); if(!t.name){ toast("Add your name first (Me tab)"); goto("me"); return; } download(`fem-fantasy-fest-${slug(t.name)}.json`, JSON.stringify(travelerExport(t), null, 2)); toast("Exported — send this file to the organizer"); });
+$("#btnBackup").addEventListener("click", exportBackup);
+$("#sb-export").addEventListener("click", exportBackup);
+$("#sb-copy").addEventListener("click", () => copyText(backupJSON(), "Backup copied — paste it into Group → Paste JSON on your browser"));
+$("#sb-close").addEventListener("click", () => { $("#saveBanner").hidden = true; });
+$("#btnPasteImport").addEventListener("click", () => {
+  const txt = $("#pasteJson").value.trim(); if(!txt){ toast("Paste a backup or traveler JSON first"); return; }
+  try{ toast(importData(JSON.parse(txt))); $("#pasteJson").value = ""; }catch(err){ toast(`Couldn't import (${err.message})`); }
+});
+const csvCell = v => { const s = String(v ?? ""); return /[",\n\r]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; };
+function rosterCSV(){
+  const head = ["Name","Phone","Email","From","Arrival airline","Arrival flight","Arrival","Departure","Hotel","Nights","Nightly rate used","Rate source","Total","Paid","Remaining","Plan"];
+  return [head.join(",")].concat(rosterRows().map(r => [r.name, r.t.phone, r.t.email, r.from, r.airline, r.flight, r.arrival, r.depart, r.hotel, r.nights, r.rate ? r.rate.toFixed(2) : "", r.rateSrc, r.total.toFixed(2), r.paid.toFixed(2), r.remaining.toFixed(2), PLAN_NAMES[r.t.plan.type]].map(csvCell).join(","))).join("\r\n");
+}
+$("#btnCsv").addEventListener("click", () => { download(`fem-fantasy-fest-roster-${todayISO()}.csv`, rosterCSV(), "text/csv"); toast("Roster CSV exported"); });
+const isBlank = x => !x.name && !x.flights.length && !x.payments.length && !x.hotel.optionId && !x.itinerary.length;
+function upsertTraveler(t){
+  t = normTraveler(t); const i = travelers.findIndex(x=>x.id===t.id);
+  if(i>=0){ travelers[i]=t; return "updated"; }
+  travelers = travelers.filter(x => !isBlank(x)); travelers.push(t); return "added";
+}
+function importData(obj){
+  let added=0, updated=0, cfgImported=false;
+  const handleT = t => { upsertTraveler(t)==="added" ? added++ : updated++; };
+  if(Array.isArray(obj)) obj.forEach(o => handleT(o && o.traveler ? o.traveler : o));
+  else if(obj && obj.type==="fft-traveler" && obj.traveler) handleT(obj.traveler);
+  else if(obj && obj.type==="fft-backup"){ (obj.travelers||[]).forEach(handleT); if(obj.config && confirm("This backup includes organizer settings. Replace this device's settings with them?")){ cfg = mergeCfg(obj.config); save(K_CFG, cfg); cfgImported=true; } }
+  else if(obj && obj.type==="fft-config" && obj.config){ cfg = mergeCfg(obj.config); save(K_CFG, cfg); cfgImported=true; }
+  else if(obj && obj.id && (obj.flights || obj.name)) handleT(obj);
+  else throw new Error("unrecognized file");
+  if(!travelers.length) travelers = [newTraveler()];
+  if(!travelers.find(t=>t.id===activeId)) activeId = travelers[0].id;
+  persist(); renderAll();
+  return `${added} added, ${updated} updated${cfgImported?", settings imported":""}`;
+}
+$("#importFile").addEventListener("change", async e => {
+  const msgs = [];
+  for(const file of e.target.files){ try{ msgs.push(`${file.name}: ${importData(JSON.parse(await file.text()))}`); }catch(err){ msgs.push(`${file.name}: couldn't import (${err.message})`); } }
+  e.target.value = ""; toast(msgs.join(" · "));
+});
+
+// share
+function openShare(){ renderShare(); openOverlay("shareOverlay"); }
+$("#btnShare").addEventListener("click", openShare);
+$("#btnShare2").addEventListener("click", openShare);
+$("#sh-print").addEventListener("click", () => window.print());
+$("#sh-copy").addEventListener("click", () => { const txt = shareText(T()); (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(()=>toast("Itinerary copied — paste it anywhere"), ()=>{ download(`itinerary-${slug(T().name)}.txt`, txt, "text/plain"); toast("Clipboard blocked — downloaded as text"); }); });
+$("#sh-native").addEventListener("click", () => navigator.share({ title: `${cfg.eventName} itinerary`, text: shareText(T()) }).catch(()=>{}));
+
+// settings
+$("#btnSettings").addEventListener("click", openSettings);
+$("#s-handles").addEventListener("input", e => { const el = e.target; if(el.dataset.hi!=null) draftCfg.paymentHandles[+el.dataset.hi][el.dataset.hk] = el.value; });
+$("#s-handles").addEventListener("click", e => { const b = e.target.closest("[data-del-handle]"); if(b){ draftCfg.paymentHandles.splice(+b.dataset.delHandle,1); renderSettingsLists(true); } });
+$("#s-addHandle").addEventListener("click", () => { draftCfg.paymentHandles.push({method:"",handle:""}); renderSettingsLists(true); });
+$("#s-hotels").addEventListener("input", e => { const el = e.target; if(el.dataset.ho!=null) draftCfg.hotels[+el.dataset.ho][el.dataset.hk] = el.dataset.hk==="nightly" ? num(el.value) : el.value; });
+$("#s-hotels").addEventListener("change", e => { if(["nightly","name"].includes(e.target.dataset.hk)) renderSettingsLists(true); });
+$("#s-hotels").addEventListener("click", e => { const b = e.target.closest("[data-del-hotel]"); if(b && confirm("Remove this hotel option?")){ draftCfg.hotels.splice(+b.dataset.delHotel,1); renderSettingsLists(true); } });
+$("#s-addHotel").addEventListener("click", () => { draftCfg.hotels.push({id:"h"+uid(),name:"",area:"",nightly:0,link:"",notes:""}); renderSettingsLists(true); });
+$("#s-save").addEventListener("click", () => {
+  collectSettings();
+  if(draftCfg.festStart && draftCfg.festEnd && draftCfg.festEnd < draftCfg.festStart){ toast("Festival end must be on/after start"); return; }
+  draftCfg.hotels = draftCfg.hotels.filter(h => h.name || num(h.nightly));
+  cfg = mergeCfg(draftCfg); save(K_CFG, cfg);
+  travelers.forEach(t => { const h = cfg.hotels.find(x=>x.id===t.hotel.optionId); if(h){ t.hotel.snapshotName=h.name; t.hotel.snapshotNightly=num(h.nightly); } });
+  persist(); renderAll(); closeOverlay("settingsOverlay"); toast("Settings saved");
+});
+$("#s-export").addEventListener("click", () => { collectSettings(); download("fem-fantasy-fest-settings.json", JSON.stringify({type:"fft-config",version:1,config:draftCfg},null,2)); toast("Settings exported"); });
+$("#s-reset").addEventListener("click", () => { if(confirm("Reset organizer settings on this device to the defaults in the file?")){ Store.remove(K_CFG); cfg = mergeCfg(null); openSettings(); renderAll(); toast("Settings reset"); } });
+
+/* ---------------- init ---------------- */
+renderAll(); resetFlightForm(); resetItinForm(); renderSaveStatus();
+if(Store.kind !== "localStorage"){
+  Store.initIDB().then(ok => {
+    if(ok){ reloadStateFromStore(); renderAll(); resetFlightForm(); resetItinForm(); }
+    else showSaveBanner("unavailable");
+    renderSaveStatus();
+  });
+}
+{ const h = (location.hash||"").slice(1); if(TABS.includes(h)) showTab(h); }
+</script>
+</body>
+</html>
